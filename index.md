@@ -3,19 +3,13 @@ layout: lesson
 root: .
 ---
 
-Are you new to MetOs? 
-
-Then this documentation is for you... 
-
-We would like to give you an overview of the tools we are commonly using at MetOs and hopefully show you how to best use the existing infrastructure (laptop, Notur/Norstore, etc.). 
-
-And of course if you have suggestions and would like to improve this short documentation, just let us know!
-
-
+Scientific Python for the Ocean, Weather and Climate Sciences.
 
 > ## Prerequisites
 >
 >  You need to understand the concepts of files and directories (including the working directory).
-> If you don't have a look at the [Unix Shell](http://swcarpentry.github.io/shell-novice/)
+> If you don't have a look at the [Unix Shell](http://swcarpentry.github.io/shell-novice/).
+>  You also need to have some prior knowledge of Python. See the Software Carpentry lesson 
+> [Programming with Python](http://swcarpentry.github.io/python-novice-inflammation/) for more information.
 >
 {: .prereq}
