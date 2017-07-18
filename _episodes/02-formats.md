@@ -9,44 +9,87 @@ objectives:
 - "Learn to recognize the most common data formats in the ocean, weather and climate sciences."
 - "Learn to open, read and write netCDF, HDF, GRIB and BUFR files"
 keypoints:
-- "netCDF, HDF, GRIB and BUFR."
+- "netCDF, HDF, GRIB and BUFR data formats"
 ---
 
-In this lesson we will first review the most common data formats used in meteorology and oceanography. Then we will learn how to recognize data coded in netCDF, HDF, GRIB and BUFR formats. Finally, we will learn to read and write files coded in these formats in python. 
+- In this lesson we will first review the most common data formats used in meteorology and oceanography i.e. 
+[netCDF](#netcdf), [HDF](#hdf), WMO [GRIB](#grib) and [BUFR](#bufr). 
 
-### netCDF
+- Then we will learn how to recognize data coded in netCDF, HDF, GRIB and BUFR formats. 
+
+- Finally, we will learn to read and write files coded in these formats in python. 
+
+
+## netCDF
 
 [NetCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) (network Common Data Form) is a machine-independent, self-describing, binary data format standard for exchanging scientific data. The project homepage is hosted by the Unidata program at the University Corporation for Atmospheric Research ([UCAR](http://www.unidata.ucar.edu)). 
 
-#### self-describing?
+### self-describing?
 
-This means that there is a header which describes the layout of the rest of the file, in particular the data arrays, as well as arbitrary file metadata in the form of name/value attributes.
+Information describing the data contents of the file are embedded within the data file itself.
 
-#### machine-independent?
+This means that there is a header which describes the layout of the rest of the file, in particular the data arrays, as well as arbitrary file metadata 
+in the form of name/value attributes.
+As all self-describing data formats, netCDF includes a standard API (Application program interface) and portable data access libraries in a variety of 
+languages, including python. There are netCDF tools that can open and work with arbitrary netCDF files, using the embedded descriptions to interpret the data.
 
-Issues such as endianness being addressed in the software libraries. 
 
-#### CF conventions?
+### machine-independent?
+
+netCDF files can be read and written on any machines where the netCDF libraries have been installed. This is not the case of many binary formats for 
+which additional information on the internal data representation must be known. For instance,
+issues such as [endianness](https://en.wikipedia.org/wiki/Endianness) being addressed in the software libraries. 
+
+### CF conventions?
 
 netCDF format is very flexible and to simplify developments of tools and speed-up netCDF data processing, metadata standards for netCDF files have been created. 
 The most common in our discipline is the [Climate and Forecast metadata standard](http://cfconventions.org/), also called CF conventions.
 
 
-The CF conventions have been adopted by the Program for Climate Model Diagnosis and Intercomparison ([PCMDI](http://www-pcmdi.llnl.gov/)), the Earth System Modeling Framework ([ESMF](https://www.earthsystemcog.org/projects/esmf/)), [NCAR](https://ncar.ucar.edu/), and various EU and international projects. 
+The CF conventions have been adopted by the Program for Climate Model Diagnosis and Intercomparison ([PCMDI](http://www-pcmdi.llnl.gov/)), 
+the Earth System Modeling Framework ([ESMF](https://www.earthsystemcog.org/projects/esmf/)), [NCAR](https://ncar.ucar.edu/), and various EU and 
+international projects. 
 
-#### netCDF3 versus netCDF4?
+If you plan to create netCDF files, following CF conventions is recommended.
 
-#### Check a netCDF file (ncdump)?
+### netCDF3 versus netCDF4?
 
-#### netCDF and python?
+netCDF4 is and extension to the classic model often called netCDF3. netCDF4 adds more powerful forms of data representation and data types at 
+the expense of some additional complexity; it is based on [HDF](#hdf) and therefore requires the installation of the HDF libraries prior to 
+the installation of netCDF. It you installed netCDF without having HDF libraries on your machine, then you probably only have netCDF3.
+
+### Check a netCDF file (ncdump)?
+
+Most of the time, netCDF filename extensions are either .nc or .nc4. However, it is not a mandatory requirement so it is useful to 
+learn to check if a file is a netCDF file:
+ 
+ 
+~~~
+$ cd metos_python/data
+$ file temperature.nc
+~~~
+{: .bash}
+ 
+~~~
+temperature.nc: NetCDF Data Format data
+~~~
+{: .output} 
+
+[file](https://en.wikipedia.org/wiki/File_(command)) is a bash shell command and is not a netCDF utility. You can use it for any 
+kind of files and it attempts torecognize its data format.
+
+
+### netCDF and python?
 
 netcdf4 python package.
 
-##### Create a netCDF file
 
-##### Read a netCDF file
+#### Read a netCDF file
 
-### HDF
+
+#### Create a netCDF file
+
+## HDF
 
 Hierarchical Data Format ([HDF](https://support.hdfgroup.org/)) is a data file format designed by the National Center for Supercomputing Applications ([NCSA](http://www.ncsa.illinois.edu/)).
 
@@ -60,11 +103,13 @@ Each defines a specific aggregate data type and provides an API for reading, wri
 
 HDF is self-describing, allowing an application to interpret the structure and contents of a file without any outside information. One HDF file can hold a mixture of related objects, which can be accessed as a group or as individual objects.
 
-##### Create an HDF file
 
-##### Read an HDF file
+#### Read an HDF file
 
-### WMO Binary data exchange formats: GRIB and BUFR
+
+#### Create an HDF file
+
+## WMO Binary data exchange formats: GRIB and BUFR
 
 WMO GRIB and BUFR data formats are Table Driven Code Forms which means you need the corresponding "table" to decode GRIB or BUFR data. 
 
@@ -75,19 +120,25 @@ The formats can equally well serve as a data storage formats, generating the sam
 
 Software for encoding and decoding data in the BUFR and GRIB formats is freely available for download from the [ECMWF software](https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home).
 
-#### BUFR
+### BUFR
 
 The WMO Binary Universal Form for the Representation of meteorological data (BUFR) is a binary code designed to represent any meteorological dataset employing a continuous binary stream. It has been designed to achieve efficient exchange and storage of meteorological and oceanographic data. It is self describing, table driven and very flexible data representation system, especially for huge volumes of data.
 
-##### Read a BUFR file
 
-##### Write a BUFR file
 
-#### GRIB 
+#### Read a BUFR file
+
+#### Create a BUFR file
+
+
+### GRIB 
 
 Similarly, another widely used bit-oriented data exchange scheme is the WMO GRIddedBinary (GRIB) format. GRIB is an efficient vehicle for transmitting large volumes of gridded data to automated centers over high-speed telecommunication lines, using modern protocols. An updated version of GRIB, commonly abbreviated to GRIB-2, is currently being introduced and is most relevant for use with satellite data.
 
-##### Read a GRIB file
 
-##### Write a GRIB file
+#### Read a GRIB file
+
+
+#### Create a GRIB file
+
 
