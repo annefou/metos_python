@@ -85,27 +85,6 @@ Access to all earlier forms of NetCDF data will be supported by current and futu
 
 But all these native characteristics are often insufficient...
 
-### CF conventions?
-
-netCDF format is slef-describing but very flexible and you still have to decide how to encode your data into the format:
-
-- Layout of data within the file
-- Unambiguous names for fields; Use standard names if possible
-- Units
-- Fill/missing values
-
-Therefore to simplify developments of tools and speed-up netCDF data processing, metadata standards for netCDF files have been created. 
-The most common in our discipline is the [Climate and Forecast metadata standard](http://cfconventions.org/), also called CF conventions.
-
-
-The CF conventions have been adopted by the Program for Climate Model Diagnosis and Intercomparison ([PCMDI](http://www-pcmdi.llnl.gov/)), 
-the Earth System Modeling Framework ([ESMF](https://www.earthsystemcog.org/projects/esmf/)), [NCAR](https://ncar.ucar.edu/), and various EU and 
-international projects. 
-
-If you plan to create netCDF files, following CF conventions is recommended. However, if you are curious or encounter data using a different convention, 
-Unidata maintains [a list](http://www.unidata.ucar.edu/software/netcdf/conventions.html) you can use to find out more information. 
-
-In this workshop, we will use and generate files that are CF compliant. 
 
 ### Check a netCDF file?
 
@@ -141,13 +120,6 @@ import netCDF4
 {: .python}
 
 
-#### Read a netCDF file
-
-
-#### Create a netCDF file
-
-
-
 ### Types of netCDF files?
 
 There are four NetCDF format variants according to the [Unidata NetCDF FAQ page](http://www.unidata.ucar.edu/software/netcdf/docs/faq.html#fv1):
@@ -171,7 +143,154 @@ The NetCDF-4 classic model format attempts to bridge gaps between the original N
 
 Luckily for us, the [NetCDF4 Python module](https://github.com/Unidata/netcdf4-python) handles many of these differences. 
 
+### Creating netCDF files
 
+All of the following code examples assume that the netcdf4-python library has been imported:
+
+~~~
+import netCDF4
+~~~
+{: .python}
+
+Then 4 following steps:
+
+1. [Dataset and Files](#create_an_empty_netcdf4_dataset_and_store_it_on_disk)
+2. [Dimensions](#dimensions)
+3. [Variables](#variables)
+4. [Writing and Retrieving data](#writing_and_retrieving_data)
+
+
+#### Create an empty netCDF4 dataset and store it on disk
+
+~~~
+import netCDF4
+foo = netCDF4.Dataset('foo.nc', 'w')
+foo.close()
+~~~
+{: .python}
+
+Then you should find a new file called "foo.nc" in your working directory:
+
+~~~
+$ ls
+~~~
+{: .bash}
+
+~~~
+$ foo.nc
+~~~
+{: .output}
+
+The Dataset constructor defaults to creating NETCDF4 format objects. Other formats may be specified with the format keyword argument 
+(see the [netCDF4-python docs](http://unidata.github.io/netcdf4-python/)).
+
+The first argument that Dataset takes is the path and name of the netCDF4 file that will be created, updated, or read. 
+The second argument is the mode with which to access the file. Use:
+
+- w (write mode) to create a new file, use clobber=True to over-write and existing one
+- r (read mode) to open an existing file read-only
+- r+ (append mode) to open an existing file and change its contents
+
+#### Dimensions
+
+Create dimensions on a dataset with the createDimension() method. We first create a new netCDF file:
+
+~~~
+import netCDF4
+f = netCDF4.Dataset('orography.nc', 'w')
+~~~
+{: .python}
+
+But this time we don't close it immediately and create 3 dimensions:
+
+
+~~~
+f.createDimension('time', None)
+f.createDimension('z', 40)
+f.createDimension('y', 400)
+f.createDimension('x', 200)
+~~~
+{: .python}
+
+The first dimension is called time with unlimited size (i.e. variable values may be appended along the this dimension). 
+Unlimited size dimensions must be declared before (“to the left of”) other dimensions. We usually use only a single unlimited size dimension 
+that is used for time.
+
+The other 3 dimensions are spatial dimensions with sizes of 40, 400, and 200, respectively.
+
+The recommended maximum number of dimensions is 4. The recommended order of dimensions is time, z, y, x. 
+Not all datasets are required to have all 4 dimensions.
+
+#### Variables
+
+Create variables on a dataset with the createVariable() method, for example:
+~~~
+lats = f.createVariable('lat', float, ('y', 'x'), zlib=True)
+lons = f.createVariable('lon', float, ('y', 'x'), zlib=True)
+orography = f.createVariable('orog', float, ('y', 'x'), zlib=True, least_significant_digit=1, fill_value=0)
+~~~
+{: .python}
+
+The first argument to createVariable() is the variable name. 
+
+The second argument is the variable type. There are many way of specifying type, but Python built-in types work well in the absence of specific requirements.
+
+The third argument is a tuple of previously defined dimension names. As noted above,
+
+The recommended maximum number of dimensions is 4
+The recommended order of dimensions is t, z, y, x
+Not all variables are required to have all 4 dimensions
+All variables should be created with the zlib=True argument to enable data compression within the netCDF4 file.
+
+When appropriate, the least_significant_digit argument should be used to improve compression and storage efficiency by quantizing the variable data 
+to the specified precision. In the example above the orography data will be quantized such that a precision of 0.1 is retained.
+
+When appropriate, the fill_value argument can be used to specify the value that the variable gets filled with before any data is written to it. 
+Doing so overrides the default netCDF _FillValue (which depends on the type of the variable). If fill_value is set to False, then the variable is not pre-filled.
+ 
+In the example above the orography data will be initialized to zero, the appropriate value for grid points that are over ocean.
+
+#### Writing and Retrieving Data
+
+Variable data in netCDF4 datasets are stored in NumPy array or masked array objects.
+
+An appropriately sized and shaped NumPy array can be loaded into a dataset variable by assigning it to a slice that span the variable:
+
+
+~~~
+import numpy as np
+
+orography[:] = np.arange(48, 51.1, 0.1)
+
+~~~
+{: .python}
+
+and values can be retrieved using most of the usual NumPy indexing and slicing techniques.
+
+There are differences between the NumPy and netCDF variable slicing rules; see the netCDF4-python docs for details.
+
+
+### CF conventions?
+
+netCDF format is slef-describing but very flexible and you still have to decide how to encode your data into the format:
+
+- Layout of data within the file
+- Unambiguous names for fields; Use standard names if possible
+- Units
+- Fill/missing values
+
+Therefore to simplify developments of tools and speed-up netCDF data processing, metadata standards for netCDF files have been created. 
+The most common in our discipline is the [Climate and Forecast metadata standard](http://cfconventions.org/), also called CF conventions.
+
+
+The CF conventions have been adopted by the Program for Climate Model Diagnosis and Intercomparison ([PCMDI](http://www-pcmdi.llnl.gov/)), 
+the Earth System Modeling Framework ([ESMF](https://www.earthsystemcog.org/projects/esmf/)), [NCAR](https://ncar.ucar.edu/), and various EU and 
+international projects. 
+
+If you plan to create netCDF files, following CF conventions is recommended. However, if you are curious or encounter data using a different convention, 
+Unidata maintains [a list](http://www.unidata.ucar.edu/software/netcdf/conventions.html) you can use to find out more information. 
+
+In this workshop, we will use and generate files that are CF compliant. 
 
 ## HDF
 
