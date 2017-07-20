@@ -426,6 +426,7 @@ f.close()
 > 1. What is the type of `lats`?
 > 2. What is the difference between `lats` and `lats[:]`?
 >
+> > ## Solution
 > > 1. lats is a netCDF variable:
 > > ` type(lats)`
 > > returns:
@@ -481,7 +482,7 @@ Unidata maintains [a list](http://www.unidata.ucar.edu/software/netcdf/conventio
 
 In this workshop, we will use and generate files that are CF compliant. 
 
-Let's have a look at a netCFF file following CF conventions:
+Let's have a look at a netCDF file following CF conventions:
 
 ~~~
 $ curl https://www.unidata.ucar.edu/software/netcdf/examples/sresa1b_ncar_ccsm3-example.nc -o sresa1b_ncar_ccsm3-example.nc
