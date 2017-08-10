@@ -451,7 +451,7 @@ f.close()
 > > `<class 'netCDF4._netCDF4.Variable'>`
 > >
 > > 2. lats is a netCDF variable; a lot more than a simple numpy array while lats[:] 
-> >    allows you to access the latitudes values stored in the lats netCDF variable.
+> >    allows you to access the latitudes values stored in the lats netCDF variable. lats[:] is a numpy array.
 > >
 > {: .solution}
 {: .challenge}
@@ -498,15 +498,18 @@ international projects.
 If you plan to create netCDF files, following CF conventions is recommended. However, if you are curious or encounter data using a different convention, 
 Unidata maintains [a list](http://www.unidata.ucar.edu/software/netcdf/conventions.html) you can use to find out more information. 
 
-In this workshop, we will use and generate files that are CF compliant. 
 
-Let's have a look at a netCDF file following CF conventions:
+Let's have a look at a netCDF file called `sresa1b_ncar_ccsm3-example.nc` that follows CF conventions.
+If you haven't downloaded this file, see [the setup instructions]({{ page.root }}/setup/) or download it now:
 
 ~~~
-$ curl https://www.unidata.ucar.edu/software/netcdf/examples/sresa1b_ncar_ccsm3-example.nc -o sresa1b_ncar_ccsm3-example.nc
-$ ncdump -h sresa1b_ncar_ccsm3-example.nc
-~~~
+curl https://www.unidata.ucar.edu/software/netcdf/examples/sresa1b_ncar_ccsm3-example.nc -o sresa1b_ncar_ccsm3-example.nc
 {: .bash}
+
+~~~
+$ ncdump -h metos_python/data/sresa1b_ncar_ccsm3-example.nc
+~~~
+
 
 ~~~
 netcdf sresa1b_ncar_ccsm3-example {
