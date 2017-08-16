@@ -6,18 +6,22 @@ root: .
 With [Software Carpentry lessons](https://software-carpentry.org/lessons/) and [Data Carpentry lessons](http://www.datacarpentry.org/lessons/) you learn the fundamental data skills needed to conduct research in your field and learn to write simple 
 programs.
 
-This one-day workshop will introduce you to Python for analyzing and visualizing spatial-temporal data. We will be using datasets from the environmental sciences that are freely available in csv, netCDF or HDF data formats. The meaning of these terms will become clear as we work through the python notebooks.
+This one-day workshop will introduce you to Python for analyzing and visualizing spatial-temporal data. We will be using datasets from the environmental sciences that are freely available. 
 
 
 We will learn:
 
-- how to identify some of the most common data formats in environmental Sciences i.e. 
-[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html), [HDF](https://support.hdfgroup.org/).
+- how to identify some of the most common raster data formats in environmental Sciences i.e.
+[GeoTIFF](https://trac.osgeo.org/geotiff/),
+[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) and [HDF](https://support.hdfgroup.org/) ([HDF-EOS](http://hdfeos.org/) and [HDF5](https://support.hdfgroup.org/HDF5/)).
 - How to view the content of these binary files 
 - How to identify the provenance and explore metadata
 - How to organise your data and develop a simple data management plan to ease your work
-- About Python libraries and command line utilities commonly used in these disciplines
+- How to access and process data in commonly used raster formats such as GeoTIFF, HDF-EOS, HDF5 and netCDF. 
+- How to combine them with vector datasets such as ESRI Shapefile and GeoJSON.
 
+
+The meaning of these terms will become clear as we work through the python notebooks.
 
 
 > ## Prerequisites
