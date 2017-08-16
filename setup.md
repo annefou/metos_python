@@ -7,7 +7,7 @@ permalink: /setup/
 To follow this lesson, you would need:
 
 1. [Install Python](#installing-python-using-anaconda)
-2. [Install netCDF, HDF, WMO GRIB and BUFR python packages](#installing-additional-python-libraries-using-anaconda)
+2. [Install netCDF, HDF python packages](#installing-additional-python-libraries-using-anaconda)
 
 
 ## Installing Python Using Anaconda
@@ -143,25 +143,6 @@ We will be using HDF5 python library and for Windows, Linux and Mac OS X:
 $ conda install hdf5
 ~~~
 {: .bash}
-
-### ECCODES
-
-[ecCodes](https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home) is a package developed by ECMWF which provides an application programming interface and 
-a set of tools for decoding and encoding messages in the following formats:
-- WMO FM-92 GRIB edition 1 and edition 2
-- WMO FM-94 BUFR edition 3 and edition 4 
-- WMO GTS abbreviated header (only decoding).
-
-#### Linux and Mac OS X 
-~~~
-$ conda config --add channels conda-forge
-$ conda install -c conda-forge python-eccodes=2.4.0
-~~~
-{: .bash}
-
-#### Windows
-
-TBD
 
 
 

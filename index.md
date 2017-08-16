@@ -3,18 +3,16 @@ layout: lesson
 root: .
 ---
 
-With [Software Carpentry lessons](https://software-carpentry.org/lessons/) you learn to write simple 
-programs, independently from your scientific research topic. In this new lesson, we aim at
-teaching you on how to work efficiently with Ocean, Weather and Climate data. It is very domain specific as all existing
-[Data Carpentry lessons](http://www.datacarpentry.org/lessons/) and attempts to cover the most common needs required when 
-starting in these fields of research.
+With [Software Carpentry lessons](https://software-carpentry.org/lessons/) and [Data Carpentry lessons](http://www.datacarpentry.org/lessons/) you learn the fundamental data skills needed to conduct research in your field and learn to write simple 
+programs.
+
+This one-day workshop will introduce you to Python for analyzing and visualizing spatial-temporal data. We will be using datasets from the environmental sciences that are freely available in csv, netCDF or HDF data formats. The meaning of these terms will become clear as we work through the python notebooks.
 
 
 We will learn:
 
-- how to identify the most common data formats in Ocean, Weather and Climate Sciences i.e. 
-[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html), [HDF](https://support.hdfgroup.org/), 
-[WMO GRIB and BUFR](http://www.wmo.int/pages/prog/www/WMOCodes.html).
+- how to identify some of the most common data formats in environmental Sciences i.e. 
+[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html), [HDF](https://support.hdfgroup.org/).
 - How to view the content of these binary files 
 - How to identify the provenance and explore metadata
 - How to organise your data and develop a simple data management plan to ease your work

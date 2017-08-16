@@ -3,27 +3,26 @@ title: "Most common Data Formats"
 teaching: 0
 exercises: 0
 questions:
-- "What are the most common data formats in the Ocean, Weather and Climate Sciences?"
-- "What are the most common python packages to read/write netCDF, HDF, GRIB and BUFR data files?"
+- "What are the most common data formats in Environmental Sciences?"
+- "What are the most common python packages to read/write netCDF and HDF data files?"
 objectives:
 - "Learn to recognize the most common data formats in the ocean, weather and climate sciences."
-- "Learn to open, read and write netCDF, HDF, GRIB and BUFR files"
+- "Learn to open, read and write netCDF and HDF files"
 keypoints:
-- "netCDF, HDF, GRIB and BUFR data formats"
+- "netCDF, HDF data formats"
 ---
 
 - In this lesson we will first review the most common data formats used in meteorology and oceanography i.e. 
-[netCDF](#netcdf), [HDF](#hdf), WMO [GRIB](#grib) and [BUFR](#bufr). 
+[netCDF](#netcdf) and [HDF](#hdf). 
 
-- Then we will learn how to recognize data coded in netCDF, HDF, GRIB and BUFR formats. 
+- Then we will learn how to recognize data coded in netCDF and HDF formats. 
 
 - Finally, we will learn to read and write files coded in these formats in python. 
 
-We divided this chapter in 3 sections based on the data format to explore:
+We divided this chapter in 2 sections based on the data format to explore:
 
 1. [netCDF data format](#netcdf)
 2. [HDF data format](#hdf)
-3. [WMO GRIB and BUFR](#wmo_binary_data_exchange_formats:_grib_and_bufr)
 
 
 ## netCDF
@@ -695,37 +694,5 @@ HDF is self-describing, allowing an application to interpret the structure and c
 
 
 #### Create an HDF file
-
-## WMO Binary data exchange formats: GRIB and BUFR
-
-WMO GRIB and BUFR data formats are Table Driven Code Forms which means you need the corresponding "table" to decode GRIB or BUFR data. 
-
-These two formats have been widely adopted for the distribution of meteorological satellite products, especially those processed to level 2 or beyond. 
-They are described in the Operational Codes and Manual on Codes. By packing information into the BUFR or GRIB code, data records can be made more compact than many other formats, resulting in faster computer-to-computer transmissions. 
-
-The formats can equally well serve as a data storage formats, generating the same efficiencies relative to information storage and retrieval devices.
-
-Software for encoding and decoding data in the BUFR and GRIB formats is freely available for download from the [ECMWF software](https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home).
-
-### BUFR
-
-The WMO Binary Universal Form for the Representation of meteorological data (BUFR) is a binary code designed to represent any meteorological dataset employing a continuous binary stream. It has been designed to achieve efficient exchange and storage of meteorological and oceanographic data. It is self describing, table driven and very flexible data representation system, especially for huge volumes of data.
-
-
-
-#### Read a BUFR file
-
-#### Create a BUFR file
-
-
-### GRIB 
-
-Similarly, another widely used bit-oriented data exchange scheme is the WMO GRIddedBinary (GRIB) format. GRIB is an efficient vehicle for transmitting large volumes of gridded data to automated centers over high-speed telecommunication lines, using modern protocols. An updated version of GRIB, commonly abbreviated to GRIB-2, is currently being introduced and is most relevant for use with satellite data.
-
-
-#### Read a GRIB file
-
-
-#### Create a GRIB file
 
 
