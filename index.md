@@ -11,9 +11,9 @@ This one-day workshop will introduce you to Python for analyzing and visualizing
 
 We will learn:
 
-- how to identify some of the most common raster data formats in environmental Sciences i.e.
-[GeoTIFF](https://trac.osgeo.org/geotiff/),
-[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) and [HDF](https://support.hdfgroup.org/) ([HDF-EOS](http://hdfeos.org/) and [HDF5](https://support.hdfgroup.org/HDF5/)).
+- how to identify some of the most common data formats (raster formats) in environmental Sciences i.e.
+[netCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) and [HDF](https://support.hdfgroup.org/) ([HDF-EOS](http://hdfeos.org/) and [HDF5](https://support.hdfgroup.org/HDF5/)),
+[GeoTIFF](https://trac.osgeo.org/geotiff/).
 - How to view the content of these binary files 
 - How to identify the provenance and explore metadata
 - How to organise your data and develop a simple data management plan to ease your work
