@@ -144,9 +144,22 @@ $ conda install hdf5
 ~~~
 {: .bash}
 
+### Geospatial Data Abstraction Library (GDAL)
+
+GDAL is a library for reading/writing raster and vector geospatial data formats.
 
 
+~~~
+$ conda install gdal
+~~~
+{: .bash}
 
+### matplotlib and basemap 
+
+~~~
+$ conda install matplotlib basemap
+~~~
+{: .bash}
 
 
 

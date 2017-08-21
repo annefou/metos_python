@@ -30,7 +30,7 @@ Spatial data are represented in many different ways and are stored in different 
 
 Raster or “gridded” data are saved on a uniform grid and rendered on a map as pixels. Each pixel contains a value that represents an area on the Earth’s surface.
 
-<img src="../fig/raster_concept.png" width="500" alt="raster concept" align="middle">
+<img src="{{ page.root }}/fig/raster_concept.png" width="500" alt="raster concept" align="middle">
 
 *Source: National Ecological Observatory Network (NEON)*
 
@@ -43,7 +43,7 @@ There are many different raster data file formats. In this lesson, we will focus
 
 ## netCDF
 
-[NetCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) (network Common Data Form) is:
+[NetCDF](http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_introduction.html) (network Common Data Form) is a:
 
 - Self-Describing 
 - Portable 
@@ -52,19 +52,17 @@ There are many different raster data file formats. In this lesson, we will focus
 - Sharable
 - Archivable
 
- a machine-independent, 
-self-describing, binary data format standard for exchanging scientific data. 
-The project homepage is hosted by the Unidata program at the University Corporation for Atmospheric Research ([UCAR](http://www.unidata.ucar.edu)). 
+data format standard for exchanging scientific data. 
 
-### Self-describing?
+| Self-describing? | Portable?  | Scalable?   | Appendable?  | Sharable?  | Archivable?   |
+|---|---|---|---|---|---|
+| Information describing the data contents of the file are embedded within the data file itself. This means that there is a header which describes the layout of the rest of the file, in particular the data arrays, as well as arbitrary file metadata in the form of name/value attributes. | A NetCDF file is machine-independent i.e. it can be accessed by computers with different ways of storing integers, characters, and floating-point numbers.For instance, issues such as [endianness](https://en.wikipedia.org/wiki/Endianness) being addressed in the software libraries.   |  A small subset of a large dataset may be accessed efficiently. | Data may be appended to a properly structured NetCDF file without copying the dataset or redefining its structure.  | One writer and multiple readers may simultaneously access the same NetCDF file.  | Access to all earlier forms of NetCDF data will be supported by current and future versions of the software.  |
 
-Information describing the data contents of the file are embedded within the data file itself.
 
-This means that there is a header which describes the layout of the rest of the file, in particular the data arrays, as well as arbitrary file metadata 
-in the form of name/value attributes.
+The netCDF project homepage is hosted by the Unidata program at the University Corporation for Atmospheric Research ([UCAR](http://www.unidata.ucar.edu)). 
+
 As all self-describing data formats, netCDF includes a standard API (Application program interface) and portable data access libraries in a variety of 
 languages, including python. There are netCDF tools that can open and work with arbitrary netCDF files, using the embedded descriptions to interpret the data.
-
 
 What does it really mean when we say that a netCDF file is self-describing? Let's find out with an example "MITgcm_state.nc".
 If you do not have downloaded the metos_python data for this lesson, please see [the setup instructions]({{ page.root }}/setup/)).
@@ -162,30 +160,6 @@ variables:
 ~~~
 {: .output}
 
-### Portable?
-
-A NetCDF file is machine-independent i.e. it can be accessed by computers with different ways of storing integers, characters, and floating-point numbers.
-This is not the case of many binary formats for 
-which additional information on the internal data representation must be known. For instance,
-issues such as [endianness](https://en.wikipedia.org/wiki/Endianness) being addressed in the software libraries. 
-
-### Scalable?
-
-A small subset of a large dataset may be accessed efficiently.
-
-### Appendable?
-Data may be appended to a properly structured NetCDF file without copying the dataset or redefining its structure.
-
-### Sharable?
-One writer and multiple readers may simultaneously access the same NetCDF file.
-
-### Archivable? 
-Access to all earlier forms of NetCDF data will be supported by current and future versions of the software.
-
-
-But all these native characteristics are often insufficient...
-
-
 ### Check a netCDF file?
 
 Most of the time, netCDF filename extensions are either .nc or .nc4. However, it is not a mandatory requirement so it is useful to 
@@ -220,30 +194,6 @@ import netCDF4
 {: .python}
 
 
-
-> ### Types of netCDF files?
->
-> There are four NetCDF format variants according to the [Unidata NetCDF FAQ page](http://www.unidata.ucar.edu/software/netcdf/docs/faq.html#fv1):
->
-> - the classic format,
-> - the 64-bit offset format,
-> - the NetCDF-4 format, and
-> - the NetCDF-4 classic model format. While this seems to add even more complexity to using NetCDF files, the reality is that unless you are generating NetCDF files, most applications read NetCDF files regardless of type with no issues. This aspect has been abstracted for the general user!
->
-> The classic format has its roots in the original version of the NetCDF standard. It is the default for new files.
-> 
-> The 64-bit offset simply allows for larger dataset to be created. Prior to the offset, files would be limited to 2 GB. 
-> A 64-bit machine is not required to read a 64-bit file. This point should not be a concern for many users.
-> 
-> The NetCDF-4 format adds many new features related to compression and multiple unlimited dimensions. NetCDF-4 is essentially a special case of the [HDF5](#hdf) 
-> file format. netCDF4 is and extension to the classic model often called netCDF3. netCDF4 adds more powerful forms of data representation and data types at 
-> the expense of some additional complexity; it is based on [HDF](#hdf) and therefore requires the installation of the HDF libraries prior to 
-> the installation of netCDF. It you installed netCDF without having HDF libraries on your machine, then you probably only have netCDF3.
-> 
-> The NetCDF-4 classic model format attempts to bridge gaps between the original NetCDF file and NetCDF-4.
-> 
-> Luckily for us, the [NetCDF4 Python module](https://github.com/Unidata/netcdf4-python) handles many of these differences. 
-{: .callout}
 
 
 ### Creating netCDF files
@@ -494,6 +444,34 @@ f.close()
 ~~~
 {: .python}
 
+
+
+
+> ### Types of netCDF files?
+>
+> There are four NetCDF format variants according to the [Unidata NetCDF FAQ page](http://www.unidata.ucar.edu/software/netcdf/docs/faq.html#fv1):
+>
+> - the classic format,
+> - the 64-bit offset format,
+> - the NetCDF-4 format, and
+> - the NetCDF-4 classic model format. While this seems to add even more complexity to using NetCDF files, the reality is that unless you are generating NetCDF files, most applications read NetCDF files regardless of type with no issues. This aspect has been abstracted for the general user!
+>
+> The classic format has its roots in the original version of the NetCDF standard. It is the default for new files.
+> 
+> The 64-bit offset simply allows for larger dataset to be created. Prior to the offset, files would be limited to 2 GB. 
+> A 64-bit machine is not required to read a 64-bit file. This point should not be a concern for many users.
+> 
+> The NetCDF-4 format adds many new features related to compression and multiple unlimited dimensions. NetCDF-4 is essentially a special case of the [HDF5](#hdf) 
+> file format. netCDF4 is and extension to the classic model often called netCDF3. netCDF4 adds more powerful forms of data representation and data types at 
+> the expense of some additional complexity; it is based on [HDF](#hdf) and therefore requires the installation of the HDF libraries prior to 
+> the installation of netCDF. It you installed netCDF without having HDF libraries on your machine, then you probably only have netCDF3.
+> 
+> The NetCDF-4 classic model format attempts to bridge gaps between the original NetCDF file and NetCDF-4.
+> 
+> Luckily for us, the [NetCDF4 Python module](https://github.com/Unidata/netcdf4-python) handles many of these differences. 
+{: .callout}
+
+
 ### CF conventions?
 
 netCDF format is self-describing but very flexible and you still have to decide how to encode your data into the format:
@@ -520,12 +498,13 @@ If you haven't downloaded this file, see [the setup instructions]({{ page.root }
 
 ~~~
 curl https://www.unidata.ucar.edu/software/netcdf/examples/sresa1b_ncar_ccsm3-example.nc -o sresa1b_ncar_ccsm3-example.nc
+~~~
 {: .bash}
 
 ~~~
 $ ncdump -h metos_python/data/sresa1b_ncar_ccsm3-example.nc
 ~~~
-
+{: .bash}
 
 ~~~
 netcdf sresa1b_ncar_ccsm3-example {
@@ -707,11 +686,161 @@ Each defines a specific aggregate data type and provides an API for reading, wri
 HDF is self-describing, allowing an application to interpret the structure and contents of a file without any outside information. One HDF file can hold a mixture of related objects, which can be accessed as a group or as individual objects.
 
 
-#### Read an HDF file
+
+#### Check an HDF file?
+
+The file (the MISR Level 3 Land products May 2007) we will be using has been downloaded at [https://l0dup05.larc.nasa.gov/L3Web/download](https://l0dup05.larc.nasa.gov/L3Web/download). 
+You first need to register (free registration) to download data from this link.
+
+~~~
+$ cd metos_python/data
+$ file MISR_AM1_CGLS_MAY_2007_F04_0031.hdf
+~~~
+{: .bash}
+  
+~~~
+MISR_AM1_CGLS_MAY_2007_F04_0031.hdf: Hierarchical Data Format (version 4) data
+~~~
+{: .output} 
+
+Note that in addition it gives some information on the version (4). The HDF version may be important as we will explain later in this lesson.
+
+#### HDF data files and python?
+
+If you are using python anaconda, HDF files can be accessed in python using the netCDF4 python package, exactly as netCDF files. The reason is that netCDF files 
+(netCDF4) is based on HDF5. [pyhdf](https://pypi.python.org/pypi/pyhdf) is also a very well know python package used to access HDF files. However, in this lesson
+we will only show how to handle HDF files with netCDF4 python package. 
+
+Let's first look at **MISR_AM1_CGLS_MAY_2007_F04_0031.hdf** and gets metadata:
+
+~~~
+from netCDF4 import Dataset
+
+f=Dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf','r')
+print("Metadata for the dataset:")
+print(f)
+print("List of available variables (or key): ")
+f.variable.keys()
+print("Metadata for 'NDVI average' variable: ")
+f.variables["NDVI average"]
+~~~
+{: .python}
+
+### Quick visualization with Python
+
+We will see later how to customize our plots and make geographical maps but for now we just want to get a quick overview of our data with python using
+[imshow](https://matplotlib.org/api/pyplot_api.html?highlight=imshow#matplotlib.pyplot.imshow) from the [matplotlib](https://matplotlib.org/) package.
+ 
+~~~
+from netCDF4 import Dataset
+import matplotlib.pyplot as plt
+
+f=Dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf','r')
+data=f.variables['NDVI average'][:]
+print(type(data))
+print(data.shape)
+plt.imshow(data)
+plt.show()
+~~~
+{: .python}
 
 
-#### Create an HDF file
+<img src="{{ page.root }}/fig/NDVI_imshow.png" width="500" alt="NDVI average May 2007 (MISR Level 3 Land products)" align="middle"> 
 
+
+We are using [matplotlib](https://matplotlib.org/), the most common 2D plotting python package. Many other plotting python packages make use 
+of matplotlib and offer to users higher-level user interface. This is why it is always useful to know about matplotlib. 
+
+
+> ### Types of HDF files?
+> There are two versions of HDF technologies that are completely different: HDF4 and HDF5. HDF4 is the first HDF format.
+> The HDF5 Format is completely different from HDF4 and different libraries are required to read/write these two different formats.
+> Hopefully, the [NetCDF4 Python module](https://github.com/Unidata/netcdf4-python) handles many of these differences. 
+> Nowadays, when we refer to HDF files, we often mean HDF5 data files.
+{: .callout}
+
+### EOS Conventions?
+
+HDF-EOS is an extension of HDF4. On December 18, 1999, NASA and its international partners launched [Terra](https://en.wikipedia.org/wiki/Terra_(satellite)), 
+the first of the [Earth Observing System](https://eospso.nasa.gov/) (EOS) satellites planned for NASA's Earth Science Enterprise (ESE) program. 
+Although HDF meets many NASA specifications for accessing data, EOS applications required additional conventions and data types, which led to the 
+development of [HDF-EOS](https://www.loc.gov/preservation/digital/formats/fdd/fdd000297.shtml) based on HDF4. 
+
+Tools for handling HDF-EOS can be found at 
+the [HDF-EOS Tools and Information Centre](http://hdfeos.org/).
+
+In 2007, [HDF-EOS5 Data Model](https://earthdata.nasa.gov/standards/hdf-eos5) File Format became an approved standard recommended for use in NASA Earth 
+Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now based on HDF5.
+
+> ## HDF4 or HDF5?
+> 
+> The examples used in the following exercises are HDF files downloaded at [http://hdfeos.org/zoo/index_openGESDISC_Examples.php](http://hdfeos.org/zoo/index_openGESDISC_Examples.php).
+>
+> 1. What is the type of `OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5` and `AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf`?
+>
+> > ## Solution
+> > 1. `OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5` is an HDF5 file and more precisely HDF-EOS5 
+> >     while `AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf` is and HDF4 file. You can check either
+> > using the `file` command or in python:
+> > ~~~
+> > from netCDF4 import Dataset
+> > f = Dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
+> > print(f)
+> > ~~~
+> > {: .python}
+> > ~~~
+> > <class 'netCDF4._netCDF4.Dataset'>
+> > root group (NETCDF4 data model, file format HDF5):
+> >    dimensions(sizes): 
+> >    variables(dimensions): 
+> >    groups: HDFEOS, HDFEOS INFORMATION
+> > ~~~
+> > {: .output}
+> >
+> > ~~~
+> > file AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf
+> > ~~~
+> > {: .bash}
+> > ~~~
+> > AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf: Hierarchical Data Format (version 4) data
+> > ~~~
+> > {: .output}
+> {: .solution}
+{: .challenge}
+
+> ## Quick plot with imshow
+> 
+> The examples used in the following exercises are HDF files downloaded at [http://hdfeos.org/zoo/index_openGESDISC_Examples.php](http://hdfeos.org/zoo/index_openGESDISC_Examples.php).
+>
+> 1. Write a python  program using imshow to visualize the 2D variable `ColumnAmountO3` from `OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5`?
+> 2. Do the same for the variable called `topog` for `AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf`?
+>
+> > ## Solution
+> > 1. 
+> > ~~~
+> > from netCDF4 import Dataset
+> > import matplotlib.pyplot as plt
+> > f = Dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
+> > data = f.groups['HDFEOS'].groups['GRIDS'].groups['OMI Column Amount O3'].groups['Data Fields'].variables['ColumnAmountO3']
+> > plt.imshow(data)
+> > plt.show()
+> > ~~~
+> > {: .python}
+> >
+> > <img src="{{ page.root }}/fig/OMI_ColumnAmountO3.png" width="500" alt="raster concept" align="middle">
+> >
+> > 2.
+> > ~~~
+> > from netCDF4 import Dataset
+> > f = Dataset('AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf')
+> > data = f.variables['topog']
+> > plt.imshow(data)
+> > plt.show()
+> > ~~~
+> > {: .python}
+> > <img src="{{ page.root }}/fig/AIRS_swaft_topog.png" width="500" alt="raster concept" align="middle">
+> {: .solution}
+{: .challenge}
 
 ## GeoTIFF
 
@@ -734,14 +863,43 @@ GeoTIFFs are also often supported by GPS units.
 Let's take an example; a GeoTIFF MODIS image showing Southern Norway and Sweden (date: 16/08/2017) with True Color:
 
 
-
-<img src="../fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Terra 1km over Southern Norway and Sweden" align="middle">
+<img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Terra 1km over Southern Norway and Sweden" align="middle">
 
 *Source: [MODIS Terra 1km over Southern Norway and Sweden]( https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.terra.1km)*
 
-We can use the [GDAL](http://www.gdal.org/) tools and library to inspect this file:
+We cannot use netCDF4 python package to read/write GeoTIFF data files but we can use the [Geospatial Data Abstraction Library](http://www.gdal.org/) (GDAL) tools and library to inspect this file. 
+This additional package needs to be installed (see [setup instructions]({{ page.root }}/setup/)).
+This library is very powerful and can read/write most raster data formats, including netCDF and HDF. It means that the example we will be given for reading GeoTIFF files
+can also be applied to read the netCDF and HDF files we used in this lesson. See the list of data formats GDAL can handle 
+[here](http://www.gdal.org/formats_list.html).
+
+
 ~~~
-$ gdalinfo metos_python/data/Southern_Norway_and_Sweden.2017229.terra.1km.tif
+from osgeo import gdal
+datafile = gdal.Open('metos_python/data/Southern_Norway_and_Sweden.2017229.terra.1km.tif')
+print( "Driver: ",datafile.GetDriver().ShortName, datafile.GetDriver().LongName)
+print( "Size is ", datafile.RasterXSize, datafile.RasterYSize)
+print( "Bands = ", datafile.RasterCount)
+print( "Coordinate System is:", datafile.GetProjectionRef ())
+print( "GetGeoTransform() = ", datafile.GetGeoTransform ())
+print( "GetMetadata() = ", datafile.GetMetadata ())
+~~~
+{: .python}
+
+~~~
+Driver:  GTiff GeoTIFF
+Size is  910 796
+Bands =  3
+Coordinate System is: GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433],AUTHORITY["EPSG","4326"]]
+GetGeoTransform() =  (4.0, 0.017582417582417617, 0.0, 62.0, 0.0, -0.008793969849246248)
+GetMetadata() =  {'AREA_OR_POINT': 'Area', 'TIFFTAG_SOFTWARE': 'ppm2geotiff v0.0.9'}
+~~~
+{: .output}
+
+You can also use `gdalinfo` command line to get similar information:
+
+~~~
+gdalinfo metos_python/data/Southern_Norway_and_Sweden.2017229.terra.1km.tif
 ~~~
 {: .bash}
 
@@ -777,6 +935,158 @@ Band 3 Block=910x3 Type=Byte, ColorInterp=Blue
 ~~~
 {: .output}
 
+This GeoTIFF file contains 3 bands (Red, Green and Blue), so we can extract each band and visualize one band with imshow:
+
+~~~
+bnd1 = datafile.GetRasterBand(1).ReadAsArray()
+bnd2 = datafile.GetRasterBand(2).ReadAsArray()
+bnd3 = datafile.GetRasterBand(3).ReadAsArray()
+
+plt.imshow(bnd1)
+plt.show()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.bnd1.png" width="500" alt="raster concept" align="middle">
+
+To visualize our 3 bands as an RGB image, we need to stack the 3 indivual arrays into one image:
+
+~~~
+print(type(bnd1), bnd1.shape)
+print(type(bnd2), bnd3.shape)
+print(type(bnd3), bnd3.shape)
+img = np.dstack((bnd1,bnd2,bnd3))
+print(type(img), img.shape)
+plt.imshow(img)
+plt.show()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.all.png" width="500" alt="raster concept" align="middle">
+
 
 ## [vector](#vector) data formats
 
+Vector data, are often used to store things like road and plot locations, boundaries of states, countries and lakes.
+
+Vector data are composed of discrete geometric locations (x,y values) known as **vertices** that define the “shape” of the spatial object. 
+The organization of the vertices determines the type of vector that we are working with: **point**, **line** or **polygon**.
+
+<img src="{{ page.root }}/fig/pnt_line_poly.png" width="500" alt="raster concept" align="middle">
+
+*Source: National Ecological Observatory Network (NEON) http://datacarpentry.org/r-spatial-data-management-intro/images/dc-spatial-vector/pnt_line_poly.png*
+
+- **Points**: Each individual point is define by a **single x, y coordinate**. There can be many points in a vector point file. Examples of point data include:
+sampling locations, the location of individual trees or the location of plots.
+- **Lines**: Lines are composed of **many (at least 2) vertices that are connected**. For instance, a road or a stream may be represented by a line. This line 
+is composed of a series of segments, each “bend” in the road or stream represents a vertex that has defined x, y location.
+- **Polygons**: A polygon consists of **3 or more vertices that are connected and “closed”**. Occasionally, a polygon can have a hole in the middle of it (like a doughnut), this is something to be aware of but not an issue we will deal with in this tutorial series. Objects often represented by polygons include:
+outlines of plot boundaries,
+lakes, oceans and states or country boundaries.
+
+> ### Data Tip: 
+> A shapefile will only contain one type of vector data: points, lines or polygons.
+ {: .callout}
+
+
+### Shapefile Structure
+
+Let's take an example (downloaded from [http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html]](http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html)).
+
+
+~~~
+$ ls Norway_places
+~~~
+{: .bash}
+
+~~~
+A-README.TXT  places.dbf  places.prj  places.shp  places.shx
+~~~
+{: .output}
+
+When working with shapefiles, it is important to remember that a shapefile consists of 3 (or more) files:
+
+- .shp: the file that contains the geometry for all features.
+- .shx: the file that indexes the geometry.
+- .dbf: the file that stores feature attributes in a tabular format.
+
+These files need to have the same name and to be stored in the same directory (folder) to open properly in a GIS, R or Python tool.
+
+Sometimes, a shapefile will have other associated files including:
+
+- .prj: the file that contains information on projection format including the coordinate system and projection information. It is a plain text file describing the projection using well-known text (WKT) format.
+- .sbn and .sbx: the files that are a spatial index of the features.
+- .shp.xml: the file that is the geospatial metadata in XML format, (e.g. ISO 19115 or XML format).
+
+### Examine shapefile with python
+
+~~~
+from osgeo import ogr
+shapedata = ogr.Open('Norway_places')
+~~~
+{: .python}
+
+Type shapedata. and press TAB to see what you can do.
+
+~~~
+
+shapedata.CopyLayer            shapedata.Reference            shapedata.__len__
+shapedata.CreateLayer          shapedata.Release              shapedata.__module__
+shapedata.DeleteLayer          shapedata.ReleaseResultSet     shapedata.__new__
+shapedata.Dereference          shapedata.TestCapability       shapedata.__reduce__
+shapedata.Destroy              shapedata.__class__            shapedata.__reduce_ex__
+shapedata.ExecuteSQL           shapedata.__del__              shapedata.__repr__
+shapedata.GetDriver            shapedata.__delattr__          shapedata.__setattr__
+shapedata.GetLayer             shapedata.__dict__             shapedata.__str__
+shapedata.GetLayerByIndex      shapedata.__doc__              shapedata.__swig_destroy__
+shapedata.GetLayerByName       shapedata.__getattr__          shapedata.__swig_getmethods__
+shapedata.GetLayerCount        shapedata.__getattribute__     shapedata.__swig_setmethods__
+shapedata.GetName              shapedata.__getitem__          shapedata.__weakref__
+shapedata.GetRefCount          shapedata.__hash__             shapedata.name
+shapedata.GetSummaryRefCount   shapedata.__init__             shapedata.this
+~~~
+{: .output}
+
+For instance, to get the number of layers:
+
+~~~
+shapedata.GetLayerCount()
+~~~
+{: .python}
+
+~~~
+1
+~~~
+{: .output}
+
+Then get the first layer and all the points from this layer:
+
+~~~
+layer = shapedata.GetLayer()
+print(layer.GetFeatureCount())
+print(layer.GetName())
+
+places_norway = []
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name = feature.GetField("NAME")
+    geometry = feature.GetGeometryRef()
+    places_norway.append([i,name,geometry.GetGeometryName()])
+
+print(places_norway[0:10])
+~~~
+{: .python}
+
+~~~
+2616
+places
+
+[[0, 'Gol', 'POINT'], [1, 'Halhjem', 'POINT'], [2, 'Tromsø', 'POINT'], [3, 'Oslo', 'POINT'], [4, 'Narvik', 'POINT'], 
+ [5, 'Bergen', 'POINT'], [6, 'Hamna', 'POINT'], [7, 'Stakkevollan', 'POINT'], [8, 'Storslett', 'POINT'], [9, 'Kvaløysletta', 'POINT']]
+~~~
+{: .output}
+
+ *Source: http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html*
+ 
+ > ## Use the preceding example to access `Norway_natural`, `Norway_roads`, etc.
+ {: .challenge}
