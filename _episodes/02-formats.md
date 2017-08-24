@@ -10,14 +10,15 @@ objectives:
 - "Learn to recognize the some of the most common data formats in the Environmental sciences."
 - "Learn to open, read and write geoTIFF, netCDF and HDF files"
 keypoints:
-- "GeoTIFF, netCDF, HDF data formats"
+- "raster formats: GeoTIFF, netCDF, HDF data formats"
+- "vector formats: shapefile data format"
 ---
 
 - In this lesson we will first review some of the most common spatial data formats used in environmental Sciences and how we categorize them as raster or vector format.
 
 - Then we will learn how to recognize raster formats such as [GeoTIFF](#geotiff), [netCDF](#netcdf) and [HDF](#hdf) data files. 
 
-- Finally, we will learn to read and write files coded in these formats in python. 
+- Finally, we will see what are vector formats and in particular shapefiles.
 
 
 This lesson is based on the Data Carpentry lesson [Spatial Data Formats](http://www.datacarpentry.org/r-spatial-data-management-intro/R/spatial-data-formats).
@@ -980,7 +981,7 @@ The organization of the vertices determines the type of vector that we are worki
 sampling locations, the location of individual trees or the location of plots.
 - **Lines**: Lines are composed of **many (at least 2) vertices that are connected**. For instance, a road or a stream may be represented by a line. This line 
 is composed of a series of segments, each “bend” in the road or stream represents a vertex that has defined x, y location.
-- **Polygons**: A polygon consists of **3 or more vertices that are connected and “closed”**. Occasionally, a polygon can have a hole in the middle of it (like a doughnut), this is something to be aware of but not an issue we will deal with in this tutorial series. Objects often represented by polygons include:
+- **Polygons**: A polygon consists of **3 or more vertices that are connected and “closed”**. Occasionally, a polygon can have a hole (or more than one) in the middle of it (like a doughnut), this is something to be aware of but not an issue we will deal with in this tutorial series. Objects often represented by polygons include:
 outlines of plot boundaries,
 lakes, oceans and states or country boundaries.
 
@@ -1063,15 +1064,12 @@ Then get the first layer and all the points from this layer:
 
 ~~~
 layer = shapedata.GetLayer()
-print(layer.GetFeatureCount())
-print(layer.GetName())
-
 places_norway = []
 for i in range(layer.GetFeatureCount()):
     feature = layer.GetFeature(i)
     name = feature.GetField("NAME")
     geometry = feature.GetGeometryRef()
-    places_norway.append([i,name,geometry.GetGeometryName()])
+    places_norway.append([i,name,geometry.GetGeometryName(), geometry.Centroid().ExportToWkt()])
 
 print(places_norway[0:10])
 ~~~
@@ -1088,5 +1086,62 @@ places
 
  *Source: http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html*
  
- > ## Use the preceding example to access `Norway_natural`, `Norway_roads`, etc.
+ > ### Filter by attributes
+ >      Use the preceding example to access information from `Norway_roads` but only for `Stolmakergata`. For instance, 
+ >      use SetAttributeFilter and GetNexFeature to pick-up `stolmakergata` only.
+ > > ## Solution
+ > > ~~~
+ > > layer = shapedata.GetLayer()
+ > > layer.SetAttributeFilter("NAME = 'Stolmakergata'")
+ > > detail = layer.GetNextFeature()
+ > > geometry = detail.GetGeometryRef()
+ > > print("Type of geometry: ", geometry.GetGeometryName())
+ > > # go through each points of the line.
+ > > print(geometry.GetPointCount())
+ > > for i in range(geometry.GetPointCount()):
+ > >     xy = geometry.GetPoint(i)
+ > >     print(xy)
+ > > ~~~
+ > > {: .python}
+ > {: .solution}
  {: .challenge}
+ 
+ > ### Shapefile with Polygons
+ >      Use the preceding example to access information from `Norway_natural`. 
+ >      You have to dig one level deeper and access the geometry contained within the polygon geometry. 
+ >      The reason is that a polygon can have 'holes'. So the first polygon is what we call the outer rings
+ >      and the other polygons are 'holes'
+ >      Then the polygon information is stored as a line (set of points) so you can access each point
+ >      of the polygon.
+ > > ## Solution
+ > > ~~~
+ > > layer = shapedata.GetLayer()
+ > > layer.SetAttributeFilter("NAME = 'Grasdalsvatnet'")
+ > > detail = layer.GetNextFeature()
+ > > geometry = detail.GetGeometryRef()
+ > > print("Type of geometry: ", geometry.GetGeometryName())
+ > > print("Number of 'rings': ", geometry.GetGeometryCount())
+ > > # Get the coordinates of the whole line                   
+ > > line = geometry.GetGeometryRef(0)
+ > > # all points in the line
+ > > print(line.GetPointCount())
+ > > for i in range(line.GetPointCount()):
+ > >     xy = line.GetPoint(i)
+ > >     print(xy)
+ > > ~~~
+ > > {: .python}
+ > {: .solution}
+ {: .challenge}
+ 
+ 
+> ### polygons versus multi-polygons: 
+> - polygons can have 'holes' as shown on the figure below:
+>
+> <img src="{{ page.root }}/fig/polygons.png" width="200" alt="raster concept" align="middle">
+>
+> - but we can also have multi-polygons; and some of them with holes too!
+>
+> <img src="{{ page.root }}/fig/multi-polygons.png" width="200" alt="raster concept" align="middle">
+>
+> 
+ {: .callout}
