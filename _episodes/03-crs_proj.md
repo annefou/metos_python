@@ -446,10 +446,5 @@ globe (e.g. latitude / longitude).
 2. **Projected coordinate Systems:** coordinate systems that are localized to
 minimize visual distortion in a particular region (e.g. Robinson, UTM, State Plane)
 
-In the next tutorial, we will discuss the differences between these CRSs in
-more detail. Feel free to skip over this section and come back to it with fresh eyes if the
-concept of a `CRS` is becoming too complex. It's easisest to take on in
-bite sized pieces!
-
 
 All the projections available in matplotlib can be found [here](https://matplotlib.org/basemap/users/mapsetup.html).
