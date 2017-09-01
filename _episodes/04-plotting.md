@@ -65,20 +65,120 @@ ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
 The resulting figure is:
 
  
- <img src="{{ page.root }}/fig/figure_axes.png" width="200" alt="raster concept" align="middle">
+ <img src="{{ page.root }}/fig/figure_axes.png" width="400" alt="figures and axes" align="middle">
  
 Here we created one subplot and one axes only. We will give another example afterwards to explain the arguments of the function `add_subplot` in more details.
 
-Then we use the `ax` object to make our plot. Let's make a very simple plot:
+Then we use the `ax` object to customize our subplot and finally plot data. For instance, we can add:
+
+- a title to our subplot
+- a title for x-axis and y-axis
+- ticks at chosen location for x-axis and y-axis
 
 ~~~
-import pandas
+import matplotlib.pyplot as plt
+import numpy as np
 
-data = pandas.read_csv('naoi_summer2001.csv')
+fig = plt.figure()  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('Title of my subplot', fontsize=14)
+
+# set tick labels for x-axis
+ax.set_xticklabels(np.arange(10), rotation=45, fontsize=10 )
+# set a title for x-axis
+ax.set_xlabel("title for x-axis")
+# choose where and how many ticks on the x-axes
+ax.set_xticks(np.arange(0, 10, 1.0))
+
+
+# set tick labels for y-axis
+ax.set_yticklabels(np.arange(5), rotation=45, fontsize=10 )
+# set a title for y-axis
+ax.set_ylabel("title for y-axis")
+# choose where and how many ticks on the y-axes
+ax.set_yticks(np.arange(0, 5, 1.0))
 ~~~
 {: .python}
 
+
  
+ <img src="{{ page.root }}/fig/figure_axes_customized.png" width="400" alt="figures and axes" align="middle">
+
+## Timeseries
+
+Our goal is to plot a timeserie for North Atlantic Oscillation (NAO) index. We take first sample data i.e. NAO indices
+for 10 days only from the 1st of June 2001 to the 10th of June 2001:
+
+~~~
+import datetime
+dates = [datetime.date( 2001,6,1), 
+     datetime.date( 2001,6,2),
+     datetime.date( 2001,6,3),
+     datetime.date( 2001,6,4),
+     datetime.date( 2001,6,5),
+     datetime.date( 2001,6,6),
+     datetime.date( 2001,6,7),
+     datetime.date( 2001,6,8),
+     datetime.date( 2001,6,9),
+     datetime.date( 2001,6,10)]
+# NAO index for each date
+nao_index = [ 0.132, -0.058, -0.321, -0.395, -0.216, -0.082, -0.023, -0.012, -0.012, -0.02]
+~~~
+{: .python}
+
+Then we plot with matplotlib:
+~~~
+import matplotlib.pyplot as plt
+%matplotlib inline
+fig = plt.figure()  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+# set a title for this sub-plot
+ax.set_title('Time series for NAO index', fontsize=14)
+# set labels for x-ticks (dates) and rotate them (45 degrees) for readability
+ax.set_xticklabels(dates, rotation=45, fontsize=10 )
+# set a title for x-axis
+ax.set_xlabel("Dates (YYYY-MM-DD)")
+# set a title for y-axis
+ax.set_ylabel("NAO index")
+# plot nao_index as a function of dates.
+ax.plot(dates, nao_index)
+~~~
+{: .python}
+
+ <img src="{{ page.root }}/fig/sample_data_ts.png" width="400" alt="figures and axes" align="middle">
+ 
+
+> ## date formatting 
+> You can fully control how your dates appear in your plot:
+>
+> ~~~
+>import matplotlib.pyplot as plt
+> import matplotlib.dates
+> %matplotlib inline
+> fig = plt.figure()  # a new figure window
+> ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+> # set a title for this sub-plot
+> ax.set_title('Time series for NAO index', fontsize=14)
+> # set labels for x-ticks (dates) and rotate them (45 degrees) for readability
+> ax.set_xticklabels(dates, rotation=45, fontsize=10 )
+> # set a title for x-axis
+> ax.set_xlabel("Dates")
+> # set a title for y-axis
+> ax.set_ylabel("NAO index")                
+> 
+> ax.xaxis.set_major_formatter(
+>     matplotlib.dates.DateFormatter('%a %d %b %Y')
+>  )
+> # plot nao_index as a function of dates.
+> ax.plot(dates, nao_index, 'r.-')
+> ~~~
+> {: .python}
+> 
+> <img src="{{ page.root }}/fig/sample_data_ts_customized.png" width="400" alt="figures and axes" align="middle">
+>
+> *DateFormatter*: use [strftime()](http://strftime.org/) format strings
+{: .callout}
+
 ## Plotting raster and vector data with basemap
 
 ### plotting raster data
