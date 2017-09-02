@@ -21,13 +21,6 @@ After completing this activity, you will understand:
 This lesson is a copy of the Data Carpentry lesson [Introduction to Coordinate reference systems](http://www.datacarpentry.org/r-spatial-data-management-intro/R/intro-to-coordinate-reference-systems).
 Minor changes have been done and python codes have been added for this tutorial (the original lesson had examples in `R`).
 
-### Download Data
-
-If you want to follow along, please download
-
-<a href="http://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/" target="_blank"  class="btn btn-success">
-Download "land" - Natural Earth Global Continent Boundary Layer</a>
-
 
 #### Getting Started with CRS
 Check out this short video highlighting how map projections can make continents

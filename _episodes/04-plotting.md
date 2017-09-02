@@ -13,18 +13,12 @@ keypoints:
 This tutorial is based from the [basemap tutorial](https://basemaptutorial.readthedocs.io/en/latest/).
 
 
-# What is basemap? Why should we learn to use it?
+# What is matplotlib? Why should we learn to use it?
 
 While python offers a large range of python packages for plotting spatio-temporal data, we will focus here 
-on the most generic python interface to create maps. Most of other python packages used for plotting spatio-temporal data are based on matplotlib and basemap.
+on the most generic python interface to create maps. Most of other python packages used for plotting spatio-temporal data are based on matplotlib.
 
-`Basemap` is an extension of matplotlib; one of the most common plotting library for Python. You may have heard or will hear about other python packages for 
-plotting spatio-temporal data (for instance pandas, geopandas, pynio & pyngl, pyqgis, plotly, bokeh, cartopy, iris, scikit-learn, seaborn, etc.); many of them
-are using matplotlib/basemap underneath for plotting and are data specific. We think it is important to understand matplotlib/basemap and learn how to use
-it effectively in your scientific workflow. At the end of the workshop, we will talk about other packages to visualize your data and we hope that this lesson
-will make it easier.
-
-# The main principle of matplotlib and basemap
+# The main principle of matplotlib
 
 First, matplotlib has two user interfaces:
 
@@ -104,7 +98,7 @@ ax.set_yticks(np.arange(0, 5, 1.0))
  
  <img src="{{ page.root }}/fig/figure_axes_customized.png" width="400" alt="figures and axes" align="middle">
 
-## Timeseries
+## Simple plots - Timeseries
 
 Our goal is to plot a timeserie for North Atlantic Oscillation (NAO) index. We take first sample data i.e. NAO indices
 for 10 days only from the 1st of June 2001 to the 10th of June 2001:
@@ -176,19 +170,202 @@ ax.plot(dates, nao_index)
 > 
 > <img src="{{ page.root }}/fig/sample_data_ts_customized.png" width="400" alt="figures and axes" align="middle">
 >
-> *DateFormatter*: use [strftime()](http://strftime.org/) format strings
+> **DateFormatter**: use [strftime()](http://strftime.org/) format strings
 {: .callout}
+
+
+# What is basemap?
+
+`Basemap` is an extension of matplotlib; one of the most common plotting library for Python. You may have heard or will hear about other python packages for 
+plotting spatio-temporal data (for instance pandas, geopandas, pynio & pyngl, pyqgis, plotly, bokeh, cartopy, iris, scikit-learn, seaborn, etc.); many of them
+are using matplotlib/basemap underneath for plotting and are data specific. We think it is important to understand matplotlib/basemap and learn how to use
+it effectively in your scientific workflow. At the end of the workshop, we will talk about other packages to visualize your data and we hope that this lesson
+will make it easier.
+
+## Create simple maps with basemap
+
+As explained in lesson [Intro to Coordinate Reference Systems & Spatial Projections](https://annefou.github.io/metos_python/03-crs_proj/), the projection you choose for
+plotting your maps is very important and depends on what you want to visualize and over which region of the globe.
 
 ## Plotting raster and vector data with basemap
 
 ### plotting raster data
+
+In our first example, we wish to plot the Vorticity fields from [ECMWF ERA-Interim reanalysis](https://www.ecmwf.int/en/research/climate-reanalysis/era-interim) 
+for summer 2001 (June, July and August). ECMWF ERA-Interim is a global atmospheric reanalysis from 1979, continuously updated in real time and this dataset is
+[freely available](http://apps.ecmwf.int/datasets/data/interim-full-daily/levtype=sfc/). However, you would need to [register](https://apps.ecmwf.int/registration/) 
+to fully access their [public dataset](http://apps.ecmwf.int/datasets/). If you wish to download your own set of data in python (various parameters and dates) 
+you can install the python package called [ECMWF WEB-API](https://software.ecmwf.int/wiki/display/WEBAPI/Web-API+Downloads).
+This part is out of scope of this tutorial and we provide a sample data set in netCDF format `EI_VO_Summer2001.nc`. 
+
+> ## Inspect `EI_VO_Summer2001.nc` wth `ncdump`:
+>
+> ~~~
+> ncdump -h ./track_summer2001/indat/EI_VO.nc
+> ~~~
+> {: .bash}
+>
+> What can you say about this file?
+> 
+> > ## Solution
+> > ~~~
+> > netcdf EI_VO {
+> > dimensions:
+> > 	lon = 512 ;
+> > 	lat = 256 ;
+> > 	lev = 1 ;
+> > 	time = UNLIMITED ; // (368 currently)
+> > variables:
+> > 	double lon(lon) ;
+> > 		lon:standard_name = "longitude" ;
+> > 		lon:long_name = "longitude" ;
+> > 		lon:units = "degrees_east" ;
+> > 		lon:axis = "X" ;
+> > 	double lat(lat) ;
+> > 		lat:standard_name = "latitude" ;
+> > 		lat:long_name = "latitude" ;
+> > 		lat:units = "degrees_north" ;
+> > 		lat:axis = "Y" ;
+> > 	double lev(lev) ;
+> > 		lev:standard_name = "air_pressure" ;
+> > 		lev:long_name = "pressure" ;
+> > 		lev:units = "Pa" ;
+> > 		lev:positive = "down" ;
+> > 		lev:axis = "Z" ;
+> > 	double time(time) ;
+> > 		time:standard_name = "time" ;
+> > 		time:units = "hours since 2001-6-1 00:00:00" ;
+> > 		time:calendar = "proleptic_gregorian" ;
+> > 		time:axis = "T" ;
+> > 	float VO(time, lev, lat, lon) ;
+> > 		VO:standard_name = "atmosphere_relative_vorticity" ;
+> > 		VO:long_name = "Vorticity (relative)" ;
+> > 		VO:units = "s**-1" ;
+> > 		VO:code = 138 ;
+> > 		VO:table = 128 ;
+> > 		VO:grid_type = "gaussian" ;
+> > 
+> > // global attributes:
+> > 		:CDI = "Climate Data Interface version 1.7.0 (http://mpimet.mpg.de/cdi)" ;
+> > 		:Conventions = "CF-1.4" ;
+> > 		:history = "Thu Feb 04 14:28:54 2016: cdo -t ecmwf -f nc copy EI_VO.grb EI_VO.nc" ;
+> > 		:institution = "European Centre for Medium-Range Weather Forecasts" ;
+> > 		:CDO = "Climate Data Operators version 1.7.0 (http://mpimet.mpg.de/cdo)" ;
+> > }
+> > ~~~
+> > This file contains one variable only called Vorticity (relative), in s**-1, stored on a [lat/lon gaussian grid](https://en.wikipedia.org/wiki/Gaussian_grid) for
+> > one level only and 368 times (UNLIMITED dimension which means we can potentialy add more times).
+> {: .solution}
+{: .challenge}
+
+<br>
+Let's plot it on a world map:
+~~~
+import matplotlib.pyplot as plt
+from matplotlib import colors as c
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap, shiftgrid
+
+import numpy as np
+import netCDF4
+f = netCDF4.Dataset('EI_VO_850hPa_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('My first map', fontsize=14)
+
+map = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+            llcrnrlon=-180,urcrnrlon=180,resolution='c', ax=ax)
+
+#map = Basemap(projection='cyl',llcrnrlat=35,urcrnrlat=80,\
+#            llcrnrlon=-65,urcrnrlon=30,resolution='c', ax=ax)
+map.drawcoastlines()
+map.fillcontinents(color='#ffe2ab')
+# draw parallels and meridians.
+#map.drawparallels(np.arange(-90.,91.,30.))
+#map.drawmeridians(np.arange(-180.,181.,30.))
+map.drawparallels(np.arange(-90.,120.,30.),labels=[1,0,0,0])
+map.drawmeridians(np.arange(-180.,180.,60.),labels=[0,0,0,1])
+
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+VO,lons = shiftgrid(180.,VO,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+x,y = map(llons,llats)
+# make a color map of fixed colors
+cmap = c.ListedColormap(['#00004c','#000080','#0000b3','#0000e6','#0026ff','#004cff',
+                         '#0073ff','#0099ff','#00c0ff','#00d900','#33f3ff','#73ffff','#c0ffff', 
+                         (0,0,0,0),
+                         '#ffff00','#ffe600','#ffcc00','#ffb300','#ff9900','#ff8000','#ff6600',
+                         '#ff4c00','#ff2600','#e60000','#b30000','#800000','#4c0000'])
+bounds=[-200,-100,-75,-50,-30,-25,-20,-15,-13,-11,-9,-7,-5,-3,3,5,7,9,11,13,15,20,25,30,50,75,100,200]
+norm = c.BoundaryNorm(bounds, ncolors=cmap.N) # cmap.N gives the number of colors of your palette
+
+cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp')
+#
+#
+## make a color bar
+fig.colorbar(cs, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds, ax=ax, orientation='horizontal')
+f.close()
+~~~
+{: .python}
+
+And to zoom over a user-defined area:
+~~~
+import matplotlib.pyplot as plt
+from matplotlib import colors as c
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap, shiftgrid
+
+import numpy as np
+import netCDF4
+f = netCDF4.Dataset('EI_VO_850hPa_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('My first map', fontsize=14)
+
+map = Basemap(projection='merc',llcrnrlat=38,urcrnrlat=76,\
+            llcrnrlon=-65,urcrnrlon=30, resolution='c', ax=ax)
+map.drawcoastlines()
+map.fillcontinents(color='#ffe2ab')
+# draw parallels and meridians.
+map.drawparallels(np.arange(-90.,91.,20.))
+map.drawmeridians(np.arange(-180.,181.,10.))
+map.drawparallels(np.arange(-90.,120.,30.),labels=[1,0,0,0])
+map.drawmeridians(np.arange(-180.,180.,60.),labels=[0,0,0,1])
+
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+VO,lons = shiftgrid(180.,VO,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+x,y = map(llons,llats)
+# make a color map of fixed colors
+cmap = c.ListedColormap(['#00004c','#000080','#0000b3','#0000e6','#0026ff','#004cff',
+                         '#0073ff','#0099ff','#00c0ff','#00d900','#33f3ff','#73ffff','#c0ffff', 
+                         (0,0,0,0),
+                         '#ffff00','#ffe600','#ffcc00','#ffb300','#ff9900','#ff8000','#ff6600',
+                         '#ff4c00','#ff2600','#e60000','#b30000','#800000','#4c0000'])
+bounds=[-200,-100,-75,-50,-30,-25,-20,-15,-13,-11,-9,-7,-5,-3,3,5,7,9,11,13,15,20,25,30,50,75,100,200]
+norm = c.BoundaryNorm(bounds, ncolors=cmap.N) # cmap.N gives the number of colors of your palette
+
+cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp')
+#
+#
+## make a color bar
+fig.colorbar(cs, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds, ax=ax, orientation='horizontal')
+f.close()
+~~~
+{: .python}
 
 ### plotting vector data
 
 ## Customize your plots
 
 
-> ## Summary
+> # Summary
 > 
 > - Keep in mind the graphic below from the [matplotlib faq](https://matplotlib.org/faq/usage_faq.html) to remember the terminology of a matplotlib plot i.e. 
 > what is a Figure and an Axes.
