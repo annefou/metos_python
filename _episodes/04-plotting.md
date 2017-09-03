@@ -271,21 +271,18 @@ import netCDF4
 f = netCDF4.Dataset('EI_VO_850hPa_Summer2001.nc', 'r')
 lats = f.variables['lat'][:]
 lons = f.variables['lon'][:]
-VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
+ # read first time and unique level and scale it to the right units
+VO = f.variables['VO'][0,0,:,:]*100000 
 fig = plt.figure(figsize=[12,15])  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
-ax.set_title('My first map', fontsize=14)
+ax.set_title('ECMWF ERA-Interim VO at 850 hPa 2001-06-01 00:00', fontsize=14)
 
 map = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=-180,urcrnrlon=180,resolution='c', ax=ax)
 
-#map = Basemap(projection='cyl',llcrnrlat=35,urcrnrlat=80,\
-#            llcrnrlon=-65,urcrnrlon=30,resolution='c', ax=ax)
 map.drawcoastlines()
 map.fillcontinents(color='#ffe2ab')
 # draw parallels and meridians.
-#map.drawparallels(np.arange(-90.,91.,30.))
-#map.drawmeridians(np.arange(-180.,181.,30.))
 map.drawparallels(np.arange(-90.,120.,30.),labels=[1,0,0,0])
 map.drawmeridians(np.arange(-180.,180.,60.),labels=[0,0,0,1])
 
@@ -311,6 +308,8 @@ f.close()
 ~~~
 {: .python}
 
+<img src="{{ page.root }}/fig/EI_VO850hPa_2001060100_global.png" width="400" alt="figures and axes" align="middle">
+
 And to zoom over a user-defined area:
 ~~~
 import matplotlib.pyplot as plt
@@ -326,7 +325,7 @@ lons = f.variables['lon'][:]
 VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
 fig = plt.figure(figsize=[12,15])  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
-ax.set_title('My first map', fontsize=14)
+ax.set_title('ECMWF ERA-Interim VO at 850 hPa 2001-06-01 00:00', fontsize=14)
 
 map = Basemap(projection='merc',llcrnrlat=38,urcrnrlat=76,\
             llcrnrlon=-65,urcrnrlon=30, resolution='c', ax=ax)
@@ -360,6 +359,161 @@ f.close()
 ~~~
 {: .python}
 
+<img src="{{ page.root }}/fig/EI_VO850hPa_2001060100.png" width="400" alt="figures and axes" align="middle">
+
+<br>
+
+### Overlay another field 
+
+We can read another field "Mean Sea level pressure" and overlay it on top of the preceding plot:
+
+~~~
+# Add another field on top of the existing VO contours.
+
+f = netCDF4.Dataset('EI_mslp_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+mslp = f.variables['MSL'][0,:,:]/100.0  # mean sea level pressure i.e. surface field.
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+mslp,lons = shiftgrid(180.,mslp,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+x,y = map(llons,llats)
+cs = map.contour(x,y,mslp, zorder=2, colors='black')
+ax.clabel(cs, fmt='%.1f',fontsize=9, inline=1)
+f.close()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100.png" width="400" alt="figures and axes" align="middle">
+
+### Inset locators
+
+The location of the zoomed box can be specified with an integer value:
+
+- 'upper right'  : 1,
+- 'upper left'   : 2,
+- 'lower left'   : 3,
+- 'lower right'  : 4,
+- 'right'        : 5,
+- 'center left'  : 6,
+- 'center right' : 7,
+- 'lower center' : 8,
+- 'upper center' : 9,
+- 'center'       : 10
+
+~~~
+import matplotlib.pyplot as plt
+from matplotlib import colors as c
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap, shiftgrid
+
+import numpy as np
+import netCDF4
+f = netCDF4.Dataset('EI_VO_850hPa_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
+fig = plt.figure(figsize=[20,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('ECMWF ERA-Interim VO at 850 hPa (shading) and MSLP (contour) at 2001-06-01 00:00', fontsize=14)
+
+map = Basemap(projection='merc',llcrnrlat=38,urcrnrlat=76,\
+            llcrnrlon=-65,urcrnrlon=30, resolution='c', ax=ax)
+
+map.drawcoastlines()
+map.fillcontinents(color='#ffe2ab', zorder=0)
+# draw parallels and meridians.
+# labels = [left,right,top,bottom]
+map.drawparallels(np.arange(-90.,120.,20.),labels=[1,0,0,0])
+map.drawmeridians(np.arange(-180.,180.,20.),labels=[0,0,0,1])
+
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+VO,lons = shiftgrid(180.,VO,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+x,y = map(llons,llats)
+# make a color map of fixed colors
+cmap = c.ListedColormap(['#00004c','#000080','#0000b3','#0000e6','#0026ff','#004cff',
+                         '#0073ff','#0099ff','#00c0ff','#00d900','#33f3ff','#73ffff','#c0ffff', 
+                         (0,0,0,0),
+                         '#ffff00','#ffe600','#ffcc00','#ffb300','#ff9900','#ff8000','#ff6600',
+                         '#ff4c00','#ff2600','#e60000','#b30000','#800000','#4c0000'])
+bounds=[-200,-100,-75,-50,-30,-25,-20,-15,-13,-11,-9,-7,-5,-3,3,5,7,9,11,13,15,20,25,30,50,75,100,200]
+norm = c.BoundaryNorm(bounds, ncolors=cmap.N) # cmap.N gives the number of colors of your palette
+
+cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp', zorder=1)
+#
+#
+## make a color bar
+fig.colorbar(cs, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds, ax=ax, orientation='horizontal')
+f.close()
+
+# Add another field on top of the existing VO contours.
+
+f = netCDF4.Dataset('EI_mslp_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+mslp = f.variables['MSL'][0,:,:]/100.0  # mean sea level pressure i.e. surface field.
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+mslp,lons = shiftgrid(180.,mslp,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+x,y = map(llons,llats)
+cs = map.contour(x,y,mslp, zorder=2, colors='black')
+ax.clabel(cs, fmt='%.1f',fontsize=9, inline=1)
+f.close()
+
+# Add a rectangle
+#import matplotlib.patches as patches
+
+llat=56
+ulat=66
+llon=-40
+rlon=0
+x1,y1 = map(llon, llat)
+x2,y2 = map(rlon,ulat)
+#ax.add_patch(
+#    patches.Rectangle(
+#        (x1, y1),        # (x,y)
+#        x2-x1,           # width
+#        y2-y1,           # height
+#        fill=False,      # remove background
+#        edgecolor='red', # line color
+#        linestyle='dashed',
+#        linewidth=3
+#    )
+#)
+# Inset locators
+
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+# 5 indicates the zoom ratio; loc=1 --> upper right
+axins = zoomed_inset_axes(ax, 3, loc=1, bbox_to_anchor=(1.5, 1.0), 
+                 bbox_transform=ax.figure.transFigure)
+
+mapins = Basemap(projection='cyl',llcrnrlat=llat,urcrnrlat=ulat,\
+            llcrnrlon=llon,urcrnrlon=rlon, resolution='c', ax=axins)
+mapins.fillcontinents(color='#ddaa66', lake_color='#7777ff')
+mapins.drawcoastlines()
+#mapins.fillcontinents(color='#ffe2ab', zorder=1)
+#mapins.drawcoastlines()
+# draw parallels and meridians.
+# labels = [left,right,top,bottom]
+mapins.drawparallels(np.arange(-90.,120.,2.),labels=[0,0,0,0])
+mapins.drawmeridians(np.arange(-180.,180.,10.),labels=[0,0,0,0])
+csins = axins.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp')
+# sub region of the original image
+axins.set_xlim(x1, x2)
+axins.set_ylim(y1, y2)
+
+
+axins.xaxis.set_minor_locator(plt.NullLocator())
+axins.yaxis.set_minor_locator(plt.NullLocator())
+
+axes = mark_inset(ax, axins, loc1=2, loc2=4,  
+        edgecolor='red', # line color
+        linestyle='dashed',
+        linewidth=3)
+~~~
+{:  .python}
 ### plotting vector data
 
 ## Customize your plots
@@ -375,5 +529,6 @@ f.close()
 > - Always use the object-oriented interface. Get in the habit of using it from the start of your analysis.
 > - For some inspiration, check out the [matplotlib example gallery](http://matplotlib.org/gallery.html) which includes the source code required to 
 >    generate each example.
+> - Get colornames from matplotlib [here](https://matplotlib.org/examples/color/named_colors.html).
 {: .callout}
 
