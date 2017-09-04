@@ -162,6 +162,12 @@ $ conda install matplotlib basemap
 {: .bash}
 
 
+### pandas
+
+~~~
+$ conda install pandas
+~~~
+{: .bash}
 
 
 
