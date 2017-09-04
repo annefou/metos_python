@@ -446,34 +446,26 @@ axins.clabel(csins, fontsize=14, inline=1,fmt = '%1.0f')
 ~~~
 {:  .python}
 
-We can even plot additional data on top in this zoomed area:
+
+We can also mark our zoomed area in the original plot:
 
 ~~~
-
-# Insert track data - we use pandas library
-import pandas
-
-data = pandas.read_csv('tracks_20010601.csv')
-print(data)
-xt, yt = map(np.array(data['lon']), np.array(data['lat']))
-cols = ['blue' for i in range(xt.size)]
-cols[0]='magenta'
-
-# make a black line
-map.plot(xt,yt, '-', color='magenta', zorder=9, ax=axins, alpha=0.5, linewidth=4)
-# plot each individual point with the first point with a different color
-map.scatter(xt, yt, s=20**2, color=cols,edgecolor='#333333', zorder=10, ax=axins)
-# Annotate each point with its date and time
-for i, lpoint in enumerate(pandas.to_datetime(data["datetime"])):
-    axins.annotate(' {0:d} h'.format(lpoint.hour), (xt[i],yt[i]),
-                xytext=(15,0), textcoords='offset points',
-                fontsize=24, color='darkblue')
-
+axes = mark_inset(ax, axins, loc1=2, loc2=4,  
+        edgecolor='red', # line color
+        linestyle='dashed',
+        linewidth=3)
 ~~~
 {: .python}
 
-> ## Remark
-> Our CSV file is very simple:
+<img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100_zoom.png" width="600" alt="track plot with zoomed area" align="middle">
+
+> ## Challenge
+>
+> We would like to add another plot on top of the previous figure in the zoomed area. The file `tracks_20010601.csv` contains storm tracks stored as 
+> a list of locations (longitude, latitude) and associated date/time. 
+> 
+> 1. Add these locations using `scatter` or `plot` methods and label each point with its corresponding time 
+> (0h, 6h, 12h, 18h).
 > ~~~
 > datetime,lon,lat
 > 2001-06-01 00:00:00,-29.241394,61.386189
@@ -482,8 +474,47 @@ for i, lpoint in enumerate(pandas.to_datetime(data["datetime"])):
 > 2001-06-01 18:00:00,-7.580597,57.688072
 > ~~~
 > {: .bash}
+> This file can be read with the `pandas` python package: 
+> ~~~
+> # To read track data, use pandas library
+> import pandas
 >
-> To read our CSV file, we used the `pandas` python package. 
+> data = pandas.read_csv('tracks_20010601.csv')
+> print(data)
+> ~~~
+> {: .python}
+> 
+> > ## Solution
+> > 
+> > 
+> > ~~~
+> > 
+> > # Insert track data - we use pandas library
+> > import pandas
+> >
+> > data = pandas.read_csv('tracks_20010601.csv')
+> > print(data)
+> > xt, yt = map(np.array(data['lon']), np.array(data['lat']))
+> > cols = ['blue' for i in range(xt.size)]
+> > cols[0]='magenta'
+> >
+> > # make a black line
+> > map.plot(xt,yt, '-', color='magenta', zorder=9, ax=axins, alpha=0.5, linewidth=4)
+> > # plot each individual point with the first point with a different color
+> > map.scatter(xt, yt, s=20**2, color=cols,edgecolor='#333333', zorder=10, ax=axins)
+> > # Annotate each point with its date and time
+> > for i, lpoint in enumerate(pandas.to_datetime(data["datetime"])):
+> >    axins.annotate(' {0:d} h'.format(lpoint.hour), (xt[i],yt[i]),
+> >                xytext=(15,0), textcoords='offset points',
+> >                fontsize=24, color='darkblue')
+> >
+> > ~~~
+> > {: .python}
+> > <img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100_tracks.png" width="600" alt="track plot with zoomed area" align="middle">
+> {: .solution}
+{: .challenge}
+
+> ## Remark
 > You can use the Pandas library to do read a wide range of data formats (including netCDF) and for instance to do statistics.
 > - Pandas is a widely-used Python library for statistics, particularly on tabular data.
 > - Borrows many features from R’s dataframes:
@@ -497,20 +528,8 @@ for i, lpoint in enumerate(pandas.to_datetime(data["datetime"])):
 {: .callout}
 
 
-We can also mark our zoomed area in the original plot:
 
-~~~
-axes = mark_inset(ax, axins, loc1=2, loc2=4,  
-        edgecolor='red', # line color
-        linestyle='dashed',
-        linewidth=3)
-~~~
-{: .python}
-
-<img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100_tracks.png" width="400" alt="track plot with zoomed area" align="middle">
-
-
-### plotting vector data
+### Plotting vector data
 
 ## Customize your plots
 
