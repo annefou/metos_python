@@ -531,8 +531,30 @@ axes = mark_inset(ax, axins, loc1=2, loc2=4,
 
 ### Plotting vector data
 
-## Customize your plots
+## Save your plots
 
+When using a jupyter notebook, it is easy to save your figures:
+- right click with your mouse and save your figure as png file.
+
+However, when running a python script or when you have many figures to generate and save, the best is to use `savefig`:
+~~~
+fig.savefig('fig.png')
+~~~
+{: .python}
+
+To change the format, simply change the extension like so:
+
+~~~
+fig.savefig('fig.pdf')
+~~~
+{: .python}
+
+## Optimize your scientific workflow: isolate computations and plotting
+
+If you need to perform "heavy" computations prior to plotting, it is a good idea to separate the computational part from the plotting part and for instance,
+create separate python scripts for the data processing part and plotting. The best to save information from the computation scripts to pass it to the plotting
+script is to use "standard" formats, either text files or netCDF, HDF, GEO-TIFF or shapefiles for storing spatio-temporal data. The advantage of doing this 
+is that it is easier to tweak the plotting script without re-running the computation every time.
 
 > # Summary
 > 

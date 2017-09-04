@@ -157,7 +157,7 @@ $ conda install gdal
 ### matplotlib and basemap 
 
 ~~~
-$ conda install matplotlib basemap
+$ conda install matplotlib basemap basemap-data-hires
 ~~~
 {: .bash}
 
