@@ -1086,52 +1086,56 @@ places
 
  *Source: http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html*
  
- > ### Filter by attributes
- >      Use the preceding example to access information from `Norway_roads` but only for `Stolmakergata`. For instance, 
- >      use SetAttributeFilter and GetNexFeature to pick-up `stolmakergata` only.
- > > ## Solution
- > > ~~~
- > > layer = shapedata.GetLayer()
- > > layer.SetAttributeFilter("NAME = 'Stolmakergata'")
- > > detail = layer.GetNextFeature()
- > > geometry = detail.GetGeometryRef()
- > > print("Type of geometry: ", geometry.GetGeometryName())
- > > # go through each points of the line.
- > > print(geometry.GetPointCount())
- > > for i in range(geometry.GetPointCount()):
- > >     xy = geometry.GetPoint(i)
- > >     print(xy)
- > > ~~~
- > > {: .python}
- > {: .solution}
- {: .challenge}
+> ## Filter by attributes
+>      Use the preceding example to access information from `Norway_roads` but only for `Stolmakergata`. For instance, 
+>      use SetAttributeFilter and GetNexFeature to pick-up `stolmakergata` only.
+>
+> > ## Solution
+> > We used `SetAttributeFilter` and `GetNexFeature` to select `stolmakergata`:
+> > ~~~
+> > layer = shapedata.GetLayer()
+> > layer.SetAttributeFilter("NAME = 'Stolmakergata'")
+> > detail = layer.GetNextFeature()
+> > geometry = detail.GetGeometryRef()
+> > print("Type of geometry: ", geometry.GetGeometryName())
+> > # go through each points of the line.
+> > print(geometry.GetPointCount())
+> > for i in range(geometry.GetPointCount()):
+> >     xy = geometry.GetPoint(i)
+> >     print(xy)
+> > ~~~
+> > {: .python}
+> {: .solution}
+{: .challenge}
  
- > ### Shapefile with Polygons
- >      Use the preceding example to access information from `Norway_natural`. 
- >      You have to dig one level deeper and access the geometry contained within the polygon geometry. 
- >      The reason is that a polygon can have 'holes'. So the first polygon is what we call the outer rings
- >      and the other polygons are 'holes'
- >      Then the polygon information is stored as a line (set of points) so you can access each point
- >      of the polygon.
- > > ## Solution
- > > ~~~
- > > layer = shapedata.GetLayer()
- > > layer.SetAttributeFilter("NAME = 'Grasdalsvatnet'")
- > > detail = layer.GetNextFeature()
- > > geometry = detail.GetGeometryRef()
- > > print("Type of geometry: ", geometry.GetGeometryName())
- > > print("Number of 'rings': ", geometry.GetGeometryCount())
- > > # Get the coordinates of the whole line                   
- > > line = geometry.GetGeometryRef(0)
- > > # all points in the line
- > > print(line.GetPointCount())
- > > for i in range(line.GetPointCount()):
- > >     xy = line.GetPoint(i)
- > >     print(xy)
- > > ~~~
- > > {: .python}
- > {: .solution}
- {: .challenge}
+> ## Shapefile with Polygons
+>      Use the preceding example to access information from `Norway_natural`. 
+>      You have to dig one level deeper and access the geometry contained within the polygon geometry. 
+>      The reason is that a polygon can have 'holes'. So the first polygon is what we call the outer rings
+>      and the other polygons are 'holes'
+>      Then the polygon information is stored as a line (set of points) so you can access each point
+>      of the polygon.
+>
+> > ## Solution
+> > There is not one solution to this question but here is one way to do it:
+> > ~~~
+> > layer = shapedata.GetLayer()
+> > layer.SetAttributeFilter("NAME = 'Grasdalsvatnet'")
+> > detail = layer.GetNextFeature()
+> > geometry = detail.GetGeometryRef()
+> > print("Type of geometry: ", geometry.GetGeometryName())
+> > print("Number of 'rings': ", geometry.GetGeometryCount())
+> > # Get the coordinates of the whole line                   
+> > line = geometry.GetGeometryRef(0)
+> > # all points in the line
+> > print(line.GetPointCount())
+> > for i in range(line.GetPointCount()):
+> >     xy = line.GetPoint(i)
+> >     print(xy)
+> > ~~~
+> > {: .python}
+> {: .solution}
+{: .challenge}
  
  
 > ### polygons versus multi-polygons: 
@@ -1144,4 +1148,4 @@ places
 > <img src="{{ page.root }}/fig/multi-polygons.png" width="200" alt="raster concept" align="middle">
 >
 > 
- {: .callout}
+{: .callout}
