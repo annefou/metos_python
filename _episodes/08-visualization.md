@@ -10,13 +10,22 @@ objectives:
 - "Learn to publish your python notebook on the web (git and nbviewer)"
 keypoints:
 - "Get an overview of nbviewer"
+- "Get an overview of plotly to publish plots on the web"
 ---
 
+# Share your jupyter notebooks
+
+## Jupyter nbviewer
+
+# Plotly for creating simple python dashboards
 
 
-Packages that are worth to mention for analyzing spatio-temporal data:
 
-- "matplotlib, geopandas, pynio & pyngl, pyqgis, plotly, bokeh & gmap, cartopy, iris"
-- "nodebox-opengl - For playing around with animations"
-- "pandas, pytables, fiona, descartes, pyproj"
-
+> ### Other interesting python packages 
+>
+> Packages that are worth to mention for analyzing spatio-temporal data:
+> 
+> - "matplotlib, geopandas, pynio & pyngl, pyqgis, plotly, bokeh & gmap, cartopy, iris"
+> - "nodebox-opengl - For playing around with animations"
+> - "pandas, pytables, fiona, descartes, pyproj"
+{: .callout}
