@@ -13,22 +13,10 @@ keypoints:
 ---
 
 
+
+Packages that are worth to mention for analyzing spatio-temporal data:
+
 - "matplotlib, geopandas, pynio & pyngl, pyqgis, plotly, bokeh & gmap, cartopy, iris"
 - "nodebox-opengl - For playing around with animations"
 - "pandas, pytables, fiona, descartes, pyproj"
 
-
-- show how to use cartopy (this package is often used for plotting for instance with wrf-python)
-
-
-
-### pynio and pyngl
-
-not available on windows!!!
-
-from conda-forge
-
-~~~
-$ conda install pynio pyngl
-~~~
-{: .bash}
