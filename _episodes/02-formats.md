@@ -845,7 +845,7 @@ Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now ba
 
 ## GeoTIFF
 
-TIFF (Tagged Image File Format) is  a raster file format for digital images, created by Aldus Corporation (merged later with Adobe) widely used for raster imagery and aerial photoraphy.
+[TIFF](https://en.wikipedia.org/wiki/TIFF) (Tagged Image File Format) is  a raster file format for digital images, created by Aldus Corporation (merged later with Adobe) widely used for raster imagery and aerial photoraphy.
 
 A [GeoTIFF](https://en.wikipedia.org/wiki/GeoTIFF) file is a georeferenced TIFF, which means it can have geographic information such as map projections embedded within the header file of the TIFF itself. 
 
@@ -866,7 +866,7 @@ Let's take an example; a GeoTIFF MODIS image showing Southern Norway and Sweden 
 
 <img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Terra 1km over Southern Norway and Sweden" align="middle">
 
-*Source: [MODIS Terra 1km over Southern Norway and Sweden]( https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.terra.1km)*
+*Source: [MODIS Terra 1km over Southern Norway and Sweden](https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.terra.1km)*
 
 We cannot use netCDF4 python package to read/write GeoTIFF data files but we can use the [Geospatial Data Abstraction Library](http://www.gdal.org/) (GDAL) tools and library to inspect this file. 
 This additional package needs to be installed (see [setup instructions]({{ page.root }}/setup/)).
@@ -968,7 +968,8 @@ plt.show()
 
 ## [vector](#vector) data formats
 
-Vector data, are often used to store things like road and plot locations, boundaries of states, countries and lakes.
+Vector data are very common and efficient geospatial formats and are often used to store things like road and plot locations, 
+boundaries of states, countries and lakes.
 
 Vector data are composed of discrete geometric locations (x,y values) known as **vertices** that define the “shape” of the spatial object. 
 The organization of the vertices determines the type of vector that we are working with: **point**, **line** or **polygon**.
@@ -985,12 +986,11 @@ is composed of a series of segments, each “bend” in the road or stream repre
 outlines of plot boundaries,
 lakes, oceans and states or country boundaries.
 
-> ### Data Tip: 
-> A shapefile will only contain one type of vector data: points, lines or polygons.
- {: .callout}
+### Shapefile
 
-
-### Shapefile Structure
+The most ubiquitous vector format is the [ESRI shapefile](http://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm). 
+Geospatial Software company [ESRI](https://www.esri.com/en-us/home) released the [shapefile format specification](https://www.google.no/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjprcuh6aHWAhXFIVAKHXUMDCcQFggoMAA&url=https%3A%2F%2Fwww.esri.com%2Flibrary%2Fwhitepapers%2Fpdfs%2Fshapefile.pdf&usg=AFQjCNE2L0GtnHhhrCxchbTpnbh8tx-jWw)
+as an open format in 1998. It was initially developed for their ArcView software but it became quickly an unofficial GIS standard.
 
 Let's take an example (downloaded from [http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html]](http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html)).
 
@@ -1019,6 +1019,7 @@ Sometimes, a shapefile will have other associated files including:
 - .sbn and .sbx: the files that are a spatial index of the features.
 - .shp.xml: the file that is the geospatial metadata in XML format, (e.g. ISO 19115 or XML format).
 
+ 
 ### Examine shapefile with python
 
 ~~~
@@ -1060,7 +1061,13 @@ shapedata.GetLayerCount()
 ~~~
 {: .output}
 
-Then get the first layer and all the points from this layer:
+
+> ### Data Tip: 
+> A shapefile will only contain one type of vector data: points, lines or polygons.
+ {: .callout}
+
+ 
+Then get the first layer and all the points from this layer, with feature "NAME" and the coordinates of each location:
 
 ~~~
 layer = shapedata.GetLayer()
@@ -1076,17 +1083,67 @@ print(places_norway[0:10])
 {: .python}
 
 ~~~
-2616
-places
-
-[[0, 'Gol', 'POINT'], [1, 'Halhjem', 'POINT'], [2, 'Tromsø', 'POINT'], [3, 'Oslo', 'POINT'], [4, 'Narvik', 'POINT'], 
- [5, 'Bergen', 'POINT'], [6, 'Hamna', 'POINT'], [7, 'Stakkevollan', 'POINT'], [8, 'Storslett', 'POINT'], [9, 'Kvaløysletta', 'POINT']]
+[[0, 'Gol', 'POINT', 'POINT (8.9436636 60.7016106)'], [1, 'Halhjem', 'POINT', 'POINT (5.4263602 60.1455207)'], [2, 'Tromsø', 'POINT', 'POINT (18.9517967 69.6669861)'], [3, 'Oslo', 'POINT', 'POINT (10.7391223 59.913263)'], [4, 'Narvik', 'POINT', 'POINT (17.426652 68.4396792)'], [5, 'Bergen', 'POINT', 'POINT (5.3289029 60.3934769)'], [6, 'Hamna', 'POINT', 'POINT (18.9827839 69.7031209)'], [7, 'Stakkevollan', 'POINT', 'POINT (19.0031056 69.6937324)'], [8, 'Storslett', 'POINT', 'POINT (21.0301562 69.7694272)'], [9, 'Kvaløysletta', 'POINT', 'POINT (18.8708572 69.6953085)']]
 ~~~
 {: .output}
 
  *Source: http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html*
  
+To get the coordinates of each location in a readable manner, we exported it to [WKT](https://en.wikipedia.org/wiki/Well-known_text) 
+(Well-Known Text) format which is now part of ISO/IEC 13249-3:2016 standard. Well-known text (WKT) is a text markup language for 
+representing vector geometry objects on a map, spatial reference systems of spatial objects and transformations between spatial 
+reference systems. We won't discuss more about this format in this lesson and use it only for printing information 
+from our shapefile.
+
+In our previous example, we could call `geometry.ExportToWkt()` directly and get the very same information because our shapefile contains
+points only. Using the method `Centroid()` with polygons or lines would return a point only representing the centroids of the polygons or lines.
+ 
+We can then plot these locations on a map; as there were too many locations, we only plot locations of type `city`:
+
+~~~
+from osgeo import ogr
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('Cities in Norway', fontsize=14)
+
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+             resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+
+map.drawmapboundary(fill_color='aqua')
+map.fillcontinents(color='#ffe2ab',lake_color='aqua')
+map.drawcoastlines()
+
+shapedata = ogr.Open('Norway_places')
+layer = shapedata.GetLayer()
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name = feature.GetField("NAME")
+    type = feature.GetField("TYPE")
+    if type == 'city':
+        geometry = feature.GetGeometryRef()
+        lon = geometry.GetPoint()[0]
+        lat = geometry.GetPoint()[1]
+        x,y = map(lon,lat)
+        map.plot(x, y, marker=marker, color='red', markersize=8, markeredgewidth=2)
+        ax.annotate(name, (x, y), color='blue', fontsize=14)
+
+plt.show()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/Norway_places_shapefile.png" alt="vector plot" align="middle">
+
+We do not explain here in details how we made this plot because this the purpose of the next lesson!
+ 
 > ## Filter by attributes
+>      In the preceding example, we extracted all the locations from `Norway_places` and then made a plot for big cities only. 
+>      For this selection, we used a simple `if` statement. In this exercise, we show how to better filter by attributes.
+>
 >      Use the preceding example to access information from `Norway_roads` but only for `Stolmakergata`. For instance, 
 >      use SetAttributeFilter and GetNexFeature to pick-up `stolmakergata` only.
 >
@@ -1149,3 +1206,4 @@ places
 >
 > 
 {: .callout}
+

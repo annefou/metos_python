@@ -172,6 +172,13 @@ $ conda install pandas
 
 
 
+### plotly
+
+~~~
+$ conda install plotly
+~~~
+{: .bash}
+
 
 
 
