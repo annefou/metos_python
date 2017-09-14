@@ -11,7 +11,7 @@ objectives:
 - "Learn to open, read and write geoTIFF, netCDF and HDF files"
 keypoints:
 - "raster formats: GeoTIFF, netCDF, HDF data formats"
-- "vector formats: shapefile data format"
+- "vector formats: shapefile, GeoJSON data format"
 ---
 
 - In this lesson we will first review some of the most common spatial data formats used in environmental Sciences and how we categorize them as raster or vector format.
@@ -1095,9 +1095,12 @@ representing vector geometry objects on a map, spatial reference systems of spat
 reference systems. We won't discuss more about this format in this lesson and use it only for printing information 
 from our shapefile.
 
-In our previous example, we could call `geometry.ExportToWkt()` directly and get the very same information because our shapefile contains
+In our previous example, we could call `geometry.GetPoint()` directly and get the very same information because our shapefile contains
 points only. Using the method `Centroid()` with polygons or lines would return a point only representing the centroids of the polygons or lines.
  
+ 
+#### Shapefile with Points
+
 We can then plot these locations on a map; as there were too many locations, we only plot locations of type `city`:
 
 ~~~
@@ -1140,6 +1143,51 @@ plt.show()
 
 We do not explain here in details how we made this plot because this the purpose of the next lesson!
  
+#### Shapefile with linestring
+
+A shapefile with lines is very similar to a shapefile with points because each linestring is made of a set of points:
+
+~~~
+shapedata = ogr.Open('Norway_railways')
+nblayer = shapedata.GetLayerCount()
+print("Number of layers: ", nblayer)
+layer = shapedata.GetLayer()
+railways_norway = []
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name = feature.GetField("NAME")
+    geometry = feature.GetGeometryRef()
+    railways_norway.append([i,name,geometry.GetGeometryName(), geometry.GetPoints()])
+
+print(railways_norway[0:10])
+~~~
+{: .python}
+
+To visualize it:
+
+<img src="{{ page.root }}/fig/Norway_railways_shapefile.png" alt="vector plot" align="middle">
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+             resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+
+map.drawmapboundary(fill_color='aqua')
+map.fillcontinents(color='#ffe2ab',lake_color='aqua')
+map.drawcoastlines()
+
+norway_roads= map.readshapefile('Norway_railways/railways', 'railways')
+
+plt.show()
+~~~
+{: .python}
+
 > ## Filter by attributes
 >      In the preceding example, we extracted all the locations from `Norway_places` and then made a plot for big cities only. 
 >      For this selection, we used a simple `if` statement. In this exercise, we show how to better filter by attributes.
@@ -1164,15 +1212,47 @@ We do not explain here in details how we made this plot because this the purpose
 > > {: .python}
 > {: .solution}
 {: .challenge}
+
+#### Shapefile with polygons
+
+The image below shows a plot of a shapefile containing polygons:
+
+ <img src="{{ page.root }}/fig/Norway_natural_shapefile.png" alt="vector plot" align="middle">
  
-> ## Shapefile with Polygons
+      The python code to make this plot is given below for information only. Plotting of shapefiles
+      will be discussed in the next lesson.
+	  
+	  
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+ 
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)      # specify (nrows, ncols, axnum)
+ 
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+              resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+ 
+map.drawmapboundary(fill_color='aqua')
+map.fillcontinents(color='#ffe2ab',lake_color='aqua')
+map.drawcoastlines()
+
+norway_natural= map.readshapefile('Norway_natural/natural', 'natural')
+ 
+plt.show()
+~~~
+{: .python}
+
+
+> ## Explore Shapefile with polygons
 >      Use the preceding example to access information from `Norway_natural`. 
 >      You have to dig one level deeper and access the geometry contained within the polygon geometry. 
 >      The reason is that a polygon can have 'holes'. So the first polygon is what we call the outer rings
 >      and the other polygons are 'holes'
 >      Then the polygon information is stored as a line (set of points) so you can access each point
 >      of the polygon.
->
+>      
 > > ## Solution
 > > There is not one solution to this question but here is one way to do it:
 > > ~~~
@@ -1193,7 +1273,8 @@ We do not explain here in details how we made this plot because this the purpose
 > > {: .python}
 > {: .solution}
 {: .challenge}
- 
+
+
  
 > ### polygons versus multi-polygons: 
 > - polygons can have 'holes' as shown on the figure below:
@@ -1207,3 +1288,71 @@ We do not explain here in details how we made this plot because this the purpose
 > 
 {: .callout}
 
+### GeoJSON
+
+[GeoJSON](http://geojson.org/) is an open standard format designed for representing simple geographical features, along with their non-spatial 
+attributes, based on JavaScript Object Notation. For the full specifications of this standard, refer to 
+[RFC 7946](https://tools.ietf.org/html/rfc7946).
+
+This section is based on the [GeoJSON documentation](https://macwright.org/2015/03/23/geojson-second-bite.html) provided 
+by [Tom MacWright](https://macwright.org/).
+
+Handling GeoJSON in python is very similar to handling shapefiles and we can for instance use the same `gdal ogr` python package.
+However, before using python, let's look at a simple GeoJSON file.
+
+You can use your favourite editor to inspect the content of a simple GeoJSON file as it is a "text" file. It has some advantages 
+(portable and readable on any machines) but as you will see when working with GeoJSON files, they can become very quickly 
+too big compared to any binary counterpart.
+
+Let's look at 
+~~~
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-118.17, 34.03]
+      },
+      "properties": {
+        "name": "East Los Angeles CA",
+        "country.etc": "CA",
+        "pop": " 125121",
+        "capital": "0"
+      }
+    }
+  ]
+}
+~~~
+{: .bash}
+
+GeoJSON supports the following geometry types: 
+
+- Point, 
+- LineString, 
+- Polygon, 
+- MultiPoint, 
+- MultiLineString, 
+- MultiPolygon. 
+
+Geometric objects with additional properties are Feature objects. Sets of features are contained by FeatureCollection objects.
+
+To read the preceding file `la_city.geoson` in python, we can use `gdal ogr` and it is very similar to what we did when reading shapefiles:
+
+~~~
+from osgeo import ogr
+la = ogr.Open('la_city.geojson')
+nblayer = la.GetLayerCount()
+print("Number of layers: ", nblayer)
+layer = la.GetLayer()
+cities_us = []
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name = feature.GetField("NAME")
+    geometry = feature.GetGeometryRef()
+    cities_us.append([i,name,geometry.GetGeometryName(), geometry.GetPoints()])
+
+print(cities_us)
+~~~
+{: .python}

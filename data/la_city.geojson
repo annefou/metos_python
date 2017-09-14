@@ -1,0 +1,18 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-118.17, 34.03]
+      },
+      "properties": {
+        "name": "East Los Angeles CA",
+        "country.etc": "CA",
+        "pop": " 125121",
+        "capital": "0"
+      }
+    }
+  ]
+}
