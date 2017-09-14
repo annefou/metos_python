@@ -1327,6 +1327,8 @@ Let's look at
 ~~~
 {: .bash}
 
+<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/la_city.geojson"></script>
+
 GeoJSON supports the following geometry types: 
 
 - Point, 
@@ -1338,7 +1340,8 @@ GeoJSON supports the following geometry types:
 
 Geometric objects with additional properties are Feature objects. Sets of features are contained by FeatureCollection objects.
 
-To read the preceding file `la_city.geoson` in python, we can use `gdal ogr` and it is very similar to what we did when reading shapefiles:
+To read the preceding file `la_city.geoson` in python, we can use `gdal ogr` and it is very similar to what we did when reading 
+shapefiles:
 
 ~~~
 from osgeo import ogr
@@ -1356,3 +1359,30 @@ for i in range(layer.GetFeatureCount()):
 print(cities_us)
 ~~~
 {: .python}
+
+It can of course become cumbersome with complex GeoJSON file containing MultiPolygons, MultiLineStrings, etc. but the principle remains
+the same. Let's take as a last example:
+
+
+<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson"></script>
+
+*Source: Grensedata Norge WGS84 Adm enheter geoJSON downloaded from [kartverket](http://data.kartverket.no/download/); registration is free for open data access*
+
+~~~
+from osgeo import ogr
+shapedata = ogr.Open('no-all-all.geojson')
+nblayer = shapedata.GetLayerCount()
+print("Number of layers: ", nblayer)
+layer = shapedata.GetLayer()
+county_norway = []
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name = feature.GetField("NAVN")
+    geometry = feature.GetGeometryRef()
+    county_norway.append([i,name,geometry.GetGeometryName(), geometry.Centroid().GetPoint()])
+        
+print(county_norway[0:10])
+~~~
+{: .python}
+
+We will see more about GeoJSON when we discuss interctive visualization and publishing on the web.
