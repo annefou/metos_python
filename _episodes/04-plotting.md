@@ -514,6 +514,173 @@ axes = mark_inset(ax, axins, loc1=2, loc2=4,
 > {: .solution}
 {: .challenge}
 
+### Overlay GeoTIFF
+
+A simple way to plot a GeoTIFF image and eventually overlay additional field/information is to use the same projection as the GeoTIFF file:
+
+
+~~~
+import matplotlib.pyplot as plt
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap
+from osgeo import gdal
+import numpy as np
+
+fig = plt.figure(figsize=(15,15))  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('Southern Norway and Sweden 29/02/2017  terra 1km', fontsize=14)
+
+# Read the data and metadata
+datafile = gdal.Open(r'Southern_Norway_and_Sweden.2017229.terra.1km.tif')
+bnd1 = datafile.GetRasterBand(1).ReadAsArray()
+bnd2 = datafile.GetRasterBand(2).ReadAsArray()
+bnd3 = datafile.GetRasterBand(3).ReadAsArray()
+nx = datafile.RasterXSize # Raster xsize
+ny = datafile.RasterYSize # Raster ysize
+
+img = np.dstack((bnd1, bnd2, bnd3))
+gt = datafile.GetGeoTransform()
+proj = datafile.GetProjection()
+
+print("Geotransform",gt)
+print("proj=", proj)
+xres = gt[1]
+yres = gt[5]
+
+
+# get the edge coordinates and add half the resolution 
+# to go to center coordinates
+xmin = gt[0] + xres * 0.5
+xmax = gt[0] + (xres * nx) - xres * 0.5
+ymin = gt[3] + (yres * ny) + yres * 0.5
+ymax = gt[3] - yres * 0.5
+print("xmin=", xmin,"xmax=", xmax,"ymin=",ymin, "ymax=", ymax)
+
+map = Basemap(projection='cyl',llcrnrlat=ymin,urcrnrlat=ymax,\
+            llcrnrlon=xmin,urcrnrlon=xmax , resolution='i', ax=ax)
+
+map.imshow(img, origin='upper', ax=ax)
+map.drawcountries(color='blue', linewidth=1.5, ax=ax)
+map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
+~~~
+{: .python}
+
+
+<img src="{{ page.root }}/fig/geotiff_plot_basemap.png" alt="geotiff plot on cylindrical map" align="middle">
+
+And if we would like to use `pcolormesh` instead of `imshow`:
+~~~
+import matplotlib.pyplot as plt
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap
+from osgeo import gdal
+import numpy as np
+
+fig = plt.figure(figsize=(15,15))  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('Southern Norway and Sweden 29/02/2017  terra 1km', fontsize=14)
+
+# Read the data and metadata
+datafile = gdal.Open(r'Southern_Norway_and_Sweden.2017229.terra.1km.tif')
+bnd1 = datafile.GetRasterBand(1).ReadAsArray()
+nx = datafile.RasterXSize # Raster xsize
+ny = datafile.RasterYSize # Raster ysize
+
+gt = datafile.GetGeoTransform()
+proj = datafile.GetProjection()
+
+print("Geotransform",gt)
+print("proj=", proj)
+xres = gt[1]
+yres = gt[5]
+
+
+# get the edge coordinates and add half the resolution 
+# to go to center coordinates
+xmin = gt[0] + xres * 0.5
+xmax = gt[0] + (xres * nx) - xres * 0.5
+ymin = gt[3] + (yres * ny) + yres * 0.5
+ymax = gt[3] - yres * 0.5
+print("xmin=", xmin,"xmax=", xmax,"ymin=",ymin, "ymax=", ymax)
+
+# create a grid of lat/lon coordinates in the original projection
+(lon_source,lat_source) = np.mgrid[xmin:xmax+xres:xres, ymax+yres:ymin:yres]
+print(xmin,xmax+xres,xres, ymax+yres,ymin,yres)
+
+
+map = Basemap(projection='cyl',llcrnrlat=ymin,urcrnrlat=ymax,\
+            llcrnrlon=xmin,urcrnrlon=xmax , resolution='i', ax=ax)
+# project in the original Basemap and olot with pcolormesh
+
+map.pcolormesh(lon_source,lat_source,bnd1.T, cmap='bone')
+map.drawcountries(color='blue', linewidth=1.5, ax=ax)
+map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/geotiff_plot_basemap_pcolormesh.png" alt="geotiff plot on cylindrical map" align="middle">
+
+As we can see on the figure above, using the projection of the GeoTIFF file is not always a good approach. To choose a better projection,
+we need to convert the coordinates taking the projection of our raster (here GeoTIFF) as the source and the projection defined in our 
+Basemap object as the target coordinate system.
+
+~~~
+import matplotlib.pyplot as plt
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap
+from osgeo import gdal
+import numpy as np
+
+fig = plt.figure(figsize=(15,15))  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+ax.set_title('Southern Norway and Sweden 29/02/2017  terra 1km', fontsize=14)
+
+# Read the data and metadata
+datafile = gdal.Open(r'Southern_Norway_and_Sweden.2017229.terra.1km.tif')
+bnd1 = datafile.GetRasterBand(1).ReadAsArray()
+bnd2 = datafile.GetRasterBand(2).ReadAsArray()
+bnd3 = datafile.GetRasterBand(3).ReadAsArray()
+nx = datafile.RasterXSize # Raster xsize
+ny = datafile.RasterYSize # Raster ysize
+
+rgb = np.dstack((bnd1/bnd1.max(), bnd2/bnd2.max(), bnd3/bnd3.max()))
+color_tuple = rgb.transpose((1,0,2)).reshape((rgb.shape[0]*rgb.shape[1],rgb.shape[2]))
+gt = datafile.GetGeoTransform()
+proj = datafile.GetProjection()
+
+print("Geotransform",gt)
+print("proj=", proj)
+xres = gt[1]
+yres = gt[5]
+
+
+# get the edge coordinates and add half the resolution 
+# to go to center coordinates
+xmin = gt[0] + xres * 0.5
+xmax = gt[0] + (xres * nx) - xres * 0.5
+ymin = gt[3] + (yres * ny) + yres * 0.5
+ymax = gt[3] - yres * 0.5
+print("xmin=", xmin,"xmax=", xmax,"ymin=",ymin, "ymax=", ymax)
+
+# create a grid of lat/lon coordinates in the original projection
+(lon_source,lat_source) = np.mgrid[xmin:xmax+xres:xres, ymax+yres:ymin:yres]
+print(xmin,xmax+xres,xres, ymax+yres,ymin,yres)
+
+map = Basemap(projection='merc',llcrnrlat=ymin,urcrnrlat=ymax,\
+            llcrnrlon=xmin,urcrnrlon=xmax , resolution='i', ax=ax)
+# project in the original Basemap
+
+x,y = map(lon_source, lat_source)
+print("shape lon and lat_source: ", lon_source.shape, lat_source.shape,bnd1.T.shape)
+map.pcolormesh(x,y,bnd1.T,color=color_tuple)
+map.drawcountries(color='blue', linewidth=1.5, ax=ax)
+map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/geotiff_plot_basemap_reprojected.png" alt="geotiff plot on mercator map" align="middle">
+
+
 > ## Remark
 > You can use the Pandas library to do read a wide range of data formats (including netCDF) and for instance to do statistics.
 > - Pandas is a widely-used Python library for statistics, particularly on tabular data.
@@ -529,7 +696,86 @@ axes = mark_inset(ax, axins, loc1=2, loc2=4,
 
 
 
-### Plotting vector data
+### Plotting vector data (shapefile)
+
+We will see how to visualize GeoJSON file in our last chapter when publishing on the web. Here we learn how to plot shapefile data only.
+
+Shapefiles can be complex to visualize depending on what type of shapefile (points, lines, etc.). However, matplotlib has a very simple way to handle
+shapefiles with lines or polygons. Let's take back an example from [our chapter on data formats](https://annefou.github.io/metos_python/02-formats/).
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+             resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+
+map.drawmapboundary(fill_color='aqua')
+map.fillcontinents(color='#ffe2ab',lake_color='aqua')
+map.drawcoastlines()
+
+norway_roads= map.readshapefile('Norway_railways/railways', 'railways')
+
+plt.show()
+~~~
+{: .python}
+
+
+<img src="{{ page.root }}/fig/Norway_railways_shapefile.png" alt="vector plot" align="middle">
+
+We had nothing to do but reading the shapefile with `readshapefile` method from a `Basemap` object. The first argument is the shapefile name 
+with its full path (but without `.shp` file extension) and the second argument is the name (to be found in the file). You can customize your plot, 
+for instance, by specifying the color and line width:
+
+~~~
+norway_roads= map.readshapefile('Norway_railways/railways', 'railways', color='red',linewidth=1.5)
+
+~~~
+{: .python}
+
+
+<img src="{{ page.root }}/fig/Norway_railways_shapefile_red.png" alt="vector plot" align="middle">
+
+Often, this approach is not flexible enough... 
+
+Let's take `` as an example:
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+ 
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)      # specify (nrows, ncols, axnum)
+ 
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+              resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+ 
+map.drawmapboundary(fill_color='white')
+map.fillcontinents(color='#ffe2ab', zorder=0, ax=ax)
+map.drawcoastlines()
+
+norway_natural= map.readshapefile('NOR_adm/NOR_adm', 'NOR_adm', color='blue',  drawbounds=True)
+
+plt.show()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/NOR_adm_shapefile.png" alt="vector plot" align="middle">
+**Source: http://www.diva-gis.org/gdata** 
+
+For instance, if we wish to fill polygons with different colors depending on the type (forest, water, park), we can go through our shapefile and choose the
+color for each type:
+
+~~~
+
+~~~
+{: .python}
+
 
 ## Save your plots
 

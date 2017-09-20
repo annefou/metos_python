@@ -864,9 +864,9 @@ GeoTIFFs are also often supported by GPS units.
 Let's take an example; a GeoTIFF MODIS image showing Southern Norway and Sweden (date: 16/08/2017) with True Color:
 
 
-<img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Terra 1km over Southern Norway and Sweden" align="middle">
+<img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Aqua 1km over Southern Norway and Sweden" align="middle">
 
-*Source: [MODIS Terra 1km over Southern Norway and Sweden](https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.terra.1km)*
+*Source: [MODIS Aqua 1km over Southern Norway and Sweden](https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.aqua.1km*
 
 We cannot use netCDF4 python package to read/write GeoTIFF data files but we can use the [Geospatial Data Abstraction Library](http://www.gdal.org/) (GDAL) tools and library to inspect this file. 
 This additional package needs to be installed (see [setup instructions]({{ page.root }}/setup/)).
@@ -971,8 +971,10 @@ plt.show()
 Vector data are very common and efficient geospatial formats and are often used to store things like road and plot locations, 
 boundaries of states, countries and lakes.
 
+
+
 Vector data are composed of discrete geometric locations (x,y values) known as **vertices** that define the “shape” of the spatial object. 
-The organization of the vertices determines the type of vector that we are working with: **point**, **line** or **polygon**.
+The organization of the vertices determines the type of vector that we are working with: **point**, **line** or **polygon**, etc.
 
 <img src="{{ page.root }}/fig/pnt_line_poly.png" width="500" alt="raster concept" align="middle">
 
@@ -985,6 +987,9 @@ is composed of a series of segments, each “bend” in the road or stream repre
 - **Polygons**: A polygon consists of **3 or more vertices that are connected and “closed”**. Occasionally, a polygon can have a hole (or more than one) in the middle of it (like a doughnut), this is something to be aware of but not an issue we will deal with in this tutorial series. Objects often represented by polygons include:
 outlines of plot boundaries,
 lakes, oceans and states or country boundaries.
+
+Some vector data formats can also include **multipolygons** (include several polygons) such as GeoJSON data format. 
+
 
 ### Shapefile
 
@@ -1361,7 +1366,7 @@ print(cities_us)
 {: .python}
 
 It can of course become cumbersome with complex GeoJSON file containing MultiPolygons, MultiLineStrings, etc. but the principle remains
-the same. Let's take as a last example:
+the same. Let's take another example:
 
 
 <script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson"></script>

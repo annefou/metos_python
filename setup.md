@@ -182,4 +182,19 @@ $ conda install plotly
 
 
 
+### pillow
+
+~~~
+$ conda install pillow
+~~~
+{: .bash}
+
+
+### scipy and scikit-image
+
+~~~
+$ conda install scipy scikit-image
+~~~
+{: .bash}
+
 
