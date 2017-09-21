@@ -766,16 +766,130 @@ plt.show()
 {: .python}
 
 <img src="{{ page.root }}/fig/NOR_adm_shapefile.png" alt="vector plot" align="middle">
+
+
 **Source: http://www.diva-gis.org/gdata** 
 
-For instance, if we wish to fill polygons with different colors depending on the type (forest, water, park), we can go through our shapefile and choose the
-color for each type:
+For instance, if we wish to fill polygons with different colors depending on the county, we can go through our shapefile and choose the
+color for each county. In our shapefile `NOR_adm` county can be identified by their names (`NAME_1`) or their associated identifier (`ID_1`):
 
 ~~~
+from osgeo import ogr
 
+shapedata = ogr.Open('NOR_adm')
+nblayer = shapedata.GetLayerCount()
+print("Number of layers: ", nblayer)
+layer = shapedata.GetLayer()
+
+nor_adm = []
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name_1 = feature.GetField("NAME_1")
+    id_1 = feature.GetField("ID_1")
+    geometry = feature.GetGeometryRef()
+    nor_adm.append([i,name_1,id_1, geometry.GetGeometryName(), geometry.Centroid().ExportToWkt()])
+
+for i in range(0,len(nor_adm),20):
+    print(nor_adm[i])
 ~~~
 {: .python}
 
+Now we can assign a color for each county and make a plot where ploygons are filled according to the county name:
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from matplotlib.collections import PatchCollection
+from matplotlib.patches import PathPatch
+import numpy as np
+
+fig     = plt.figure(figsize=[12,15])
+ax      = fig.add_subplot(111)
+
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+              resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+
+map.drawmapboundary(fill_color='white')
+map.fillcontinents(color='#ffe2ab', zorder=0, ax=ax)
+map.drawcoastlines()
+
+map.readshapefile('NOR_adm/NOR_adm', 'NOR_adm', drawbounds = False)
+
+patches   = []
+
+color_values = np.zeros(len(map.NOR_adm))
+for i, info, shape in zip(range(len(map.NOR_adm_info)),map.NOR_adm_info, map.NOR_adm):
+        patches.append( Polygon(np.array(shape), True) )
+        color_values[i] = info['ID_1']
+
+col = PatchCollection(patches, linewidths=1., zorder=2)
+col.set(array=color_values, cmap='jet')
+
+ax.add_collection(col)
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/NOR_adm_shapefile_filled.png" alt="vector plot" align="middle">
+
+or using `gal ogr`:
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+from matplotlib.patches import Polygon
+from matplotlib.collections import PatchCollection
+from matplotlib.patches import PathPatch
+import numpy as np
+
+fig     = plt.figure(figsize=[12,15])
+ax      = fig.add_subplot(111)
+
+
+map = Basemap(llcrnrlon=-1.0,urcrnrlon=40.,llcrnrlat=55.,urcrnrlat=75.,
+              resolution='i', projection='lcc', lat_1=65., lon_0=5.)
+
+map.drawmapboundary(fill_color='white')
+map.fillcontinents(color='#ffe2ab', zorder=0, ax=ax)
+map.drawcoastlines()
+
+shapedata = ogr.Open('NOR_adm')
+nblayer = shapedata.GetLayerCount()
+print("Number of layers: ", nblayer)
+layer = shapedata.GetLayer()
+patches = []
+color_values = np.empty((0), int)
+for i in range(layer.GetFeatureCount()):
+    feature = layer.GetFeature(i)
+    name_1 = feature.GetField("NAME_1")
+    id_1 = feature.GetField("ID_1")
+    geometry = feature.GetGeometryRef()
+    
+    nbrRings = geometry.GetGeometryCount()
+    type_geom = geometry.GetGeometryName()
+    if  type_geom == "MULTIPOLYGON":
+	# get outer ring of each polygon
+        for geom_part in geometry:  
+            lon,lat=zip(*(geom_part.GetGeometryRef(0).GetPoints()))
+            x,y = map(lon,lat)
+            patches.append( Polygon(np.array(list(zip(x,y))), True) )
+            color_values = np.append(color_values, id_1)
+    else: 
+    # get outer ring only 0 (not interested by holes)
+	# get points from this first ring
+        lon,lat=zip(*(geometry.GetGeometryRef(0).GetPoints()))
+        x,y = map(lon,lat)
+        patches.append( Polygon(np.array(list(zip(x,y))), True) )
+        color_values = np.append(color_values, id_1)
+        
+col = PatchCollection(patches, linewidths=1., zorder=2)
+col.set(array=color_values, cmap='jet') 
+ax.add_collection(col)
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/NOR_adm_shapefile_filled_ogr.png" alt="vector plot" align="middle">
 
 ## Save your plots
 
