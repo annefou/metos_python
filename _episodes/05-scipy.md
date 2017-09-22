@@ -1,13 +1,17 @@
 ---
-title: "Scientific Computing Tools for Python (SciPy)"
+title: "Data analysis with python"
 teaching: 0
 exercises: 0
 questions:
-- "Learn about [SciPy](https://www.scipy.org/about.html), a Python-based ecosystem of open-source software for mathematics, science, and engineering."
+- "What is pandas, geopandas, SciPy?"
+- "Why using GeoPandas?"
+- "How can I use Scipy?"
 objectives:
-- ""
+- "Learn about pandas and geopandas for spatio-temporal data analysis"
+- "Learn about [SciPy](https://www.scipy.org/about.html), a Python-based ecosystem of open-source software for mathematics, science, and engineering."
+- "Using SciPy clustering algorithms on satellite images"
 keypoints:
-- ""
+- "pandas, geopandas, scipy library"
 ---
 
 [SciPy](https://www.scipy.org/about.html) is a Python-based ecosystem of open-source software for mathematics, science, and engineering. 
@@ -23,7 +27,41 @@ In particular, these are some of the core packages:
 
 We won't cover the usage of all these packages and will only give a few examples that are meaningful when working with spatio-temporal data.
 
-# NumPy
+
+You know some of these packages, for instance [NumPy](http://www.numpy.org/) and [Matplotlib](http://matplotlib.org/); we have used them in previous chapters.
+
+We also use partly [IPython](http://ipython.org/) when using jupyter notebooks.
+
+The usage of [nose](https://nose.readthedocs.org/en/latest/) and [Sympy](http://www.sympy.org/) are both outside the scope of this lesson.
+
+
+
+# pandas and geopandas
+
+Several parts of this lessons were copied from [Python for ecologists](http://www.datacarpentry.org/python-ecology-lesson/), [Plotting an Programming in Python](https://swcarpentry.github.io/python-novice-gapminder) and
+[Vector Data processing Using Python Tools](https://geohackweek.github.io/vector/).
+
+## Pandas in Python
+
+One of the best options for working with tabular data in Python is to use the [Python Data Analysis Library](http://pandas.pydata.org/) (a.k.a. Pandas). 
+The Pandas library provides data structures, produces high quality plots with [matplotlib](http://matplotlib.org/) and integrates nicely with other 
+libraries that use [NumPy](http://www.numpy.org/) arrays.
+
+To import the `pandas` library:
+
+~~~
+import pandas as pd
+~~~
+{: .python}
+
+It is very common to give `pd` as a nickname for `pandas` to shorten the command. This means we don’t have to type out pandas each time we call a Pandas function.
+
+`pandas` can handle a large variety of data formats ranging from `csv` to `HDF5` and `JSON`:
+
+
+## Geopandas in Python
+
+Geopandas is not part of the official SciPy ecosystem but has a number of features that can ease our work when manipulating spatio-temporal data.
 
 # SciPy
 
@@ -43,7 +81,7 @@ We won't cover the usage of all these packages and will only give a few examples
 - scipy.special Any special mathematical functions
 - scipy.stats Statistics
 
+## K-Means Clustering of a Satellite Images using Scipy
 
-# Matplotlib
+This part is taken from the excellent [blog of Max Köning](http://geoinformaticstutorial.blogspot.no/2016/02/k-means-clustering-of-satellite-images.html).
 
-# pandas

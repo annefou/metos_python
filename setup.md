@@ -165,7 +165,7 @@ $ conda install matplotlib basemap basemap-data-hires
 ### pandas
 
 ~~~
-$ conda install pandas
+$ conda install pandas geopandas pytables
 ~~~
 {: .bash}
 
@@ -180,6 +180,12 @@ $ conda install plotly
 {: .bash}
 
 
+### Animation ffmpeg
+
+~~~
+$ conda install  ffmpeg
+~~~
+{: .bash}
 
 
 ### pillow
@@ -190,11 +196,21 @@ $ conda install pillow
 {: .bash}
 
 
-### scipy and scikit-image
+### scipy, scikit-image and scickit-learn
 
 ~~~
-$ conda install scipy scikit-image
+$ conda install scipy scikit-learn scikit-image
 ~~~
 {: .bash}
+
+
+
+### xarray and dask
+
+~~~
+$ conda install xarray dask
+~~~
+{: .bash}
+
 
 

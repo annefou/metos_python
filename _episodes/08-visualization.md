@@ -12,10 +12,11 @@ keypoints:
 - "Get an overview of nbviewer"
 - "Get an overview of plotly to publish plots on the web"
 ---
+# Embedded animations within your jupyter notebook
 
-# Share your jupyter notebooks
 
-## Jupyter nbviewer
+# Share your jupyter notebooks (nbviewer)
+
 
 # Plotly for creating simple python dashboards
 
