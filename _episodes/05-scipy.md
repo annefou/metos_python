@@ -85,3 +85,52 @@ Geopandas is not part of the official SciPy ecosystem but has a number of featur
 
 This part is taken from the excellent [blog of Max Köning](http://geoinformaticstutorial.blogspot.no/2016/02/k-means-clustering-of-satellite-images.html).
 
+**Source: https://landsat.visibleearth.nasa.gov/view.php?id=84630**
+
+~~~
+import gdal, gdalconst
+import numpy as np
+from scipy.cluster.vq import *
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Read Landsat image image into Numpy Array
+filename="columbia_oli_2014183_geo.tiff"
+datafile = gdal.Open(filename, gdalconst.GA_ReadOnly)
+
+dataraster = datafile.GetRasterBand(1).ReadAsArray()
+# Flatten image to get line of values
+flatraster = dataraster.flatten()
+
+# Create figure to receive results
+fig = plt.figure(figsize=[20,7])
+fig.suptitle('K-Means Classification')
+
+# In first subplot add original Landsat image
+ax = plt.subplot(241)
+ax.axis('off')
+ax.set_title('Original Image')
+ax.imshow(dataraster, cmap='gray', interpolation='nearest', aspect='auto')
+
+# In remaining subplots add k-means classified images
+for i in range(7):
+    print("Calculate k-means with ", i+2, " cluster.")
+    
+    #This scipy code classifies k-mean, code has same length as flattened
+    #Landsat raster and defines which class the landsat value corresponds to
+    centroids, variance = kmeans(flatraster.astype(float), i+2)
+    code, distance = vq(flatraster, centroids)
+    
+    #Since code contains the classified values, reshape into Landsat image dimensions
+    codeim = code.reshape(dataraster.shape[0], dataraster.shape[1])
+    
+    #Plot the subplot with (i+2)th k-means
+    ax = plt.subplot(2,4,i+2)
+    plt.axis('off')
+    xlabel = str(i+2) , ' clusters'
+    ax.set_title(xlabel)
+    plt.imshow(codeim, interpolation='nearest', aspect='auto', cmap='jet')
+    
+plt.show()
+~~~
+{: .python}
