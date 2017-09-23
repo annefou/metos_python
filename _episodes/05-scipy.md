@@ -85,7 +85,25 @@ Geopandas is not part of the official SciPy ecosystem but has a number of featur
 
 This part is taken from the excellent [blog of Max Köning](http://geoinformaticstutorial.blogspot.no/2016/02/k-means-clustering-of-satellite-images.html).
 
+K-means is a widely used method in cluster analysis. However, this method is valid only if a number of assumptions is valid with your dataset:
+
+- k-means assumes the variance of the distribution of each attribute (variable) is spherical;
+- all variables have the same variance;
+- the prior probability for all k clusters is the same, i.e., each cluster has roughly equal number of observations;
+
+If any one of these 3 assumptions are violated, then k-means will not be correct.
+
+On major decision you have to take when using K-means is to choose the number of cluster a priori. However, as we will see below, this choice is critical
+and has a strong influence on the results:
+
+Let's take the following image as an example:
+
+<img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/84000/84630/columbia_oli_2014183_geo.tif" width="400" alt="clustering K-means" align="middle">
+
+
 **Source: https://landsat.visibleearth.nasa.gov/view.php?id=84630**
+
+An apply K-means for different number of clusters:
 
 ~~~
 import gdal, gdalconst
@@ -134,3 +152,12 @@ for i in range(7):
 plt.show()
 ~~~
 {: .python}
+
+
+
+<img src="{{ page.root }}/fig/columbia_oli_2014183_clusters.png" width="400" alt="clustering K-means" align="middle">
+
+> ## K-means limitations
+> See [here](http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_assumptions.html#example-cluster-plot-kmeans-assumptions-py) 
+> what can happen if you do not choose the "right" number of clusters or when your data do not K-means assumptions. 
+{: .callout}
