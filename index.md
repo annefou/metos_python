@@ -39,7 +39,7 @@ The meaning of these terms will become clear as we work through the python noteb
 >
 > 3. Learners must get the metos data before class starts:
 >    please download and unzip the file 
->    [metos-python-data.zip]({{page.root}}/files/metos-python-data.zip).
+>    [metos-python-data.tar](https://zenodo.org/record/995709/files/metos-python-data.tar).
 >
 >    Please see [the setup instructions]({{ page.root }}/setup/)
 >    for details.
