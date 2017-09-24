@@ -214,3 +214,9 @@ $ conda install xarray dask
 
 
 
+### xarray and dask, etc.
+
+~~~
+$ conda install cartopy holoviews datashader dill
+~~~
+{: .bash}

@@ -1187,7 +1187,7 @@ map.drawmapboundary(fill_color='aqua')
 map.fillcontinents(color='#ffe2ab',lake_color='aqua')
 map.drawcoastlines()
 
-norway_roads= map.readshapefile('Norway_railways/railways', 'railways')
+norway_roads= map.readshapefile('Norway_roads/roads', 'roads')
 
 plt.show()
 ~~~

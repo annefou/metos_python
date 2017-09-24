@@ -3,15 +3,13 @@ title: "Data analysis with python"
 teaching: 0
 exercises: 0
 questions:
-- "What is pandas, geopandas, SciPy?"
-- "Why using GeoPandas?"
+- "What is SciPy?"
 - "How can I use Scipy?"
 objectives:
-- "Learn about pandas and geopandas for spatio-temporal data analysis"
-- "Learn about [SciPy](https://www.scipy.org/about.html), a Python-based ecosystem of open-source software for mathematics, science, and engineering."
-- "Using SciPy clustering algorithms on satellite images"
+- "Learn about [SciPy](https://www.scipy.org/about.html) for spatio-temporal data analysis"
+- "Using SciPy clustering algorithms on spatio-temporal data"
 keypoints:
-- "pandas, geopandas, scipy library"
+- "scipy library"
 ---
 
 [SciPy](https://www.scipy.org/about.html) is a Python-based ecosystem of open-source software for mathematics, science, and engineering. 
@@ -30,38 +28,15 @@ We won't cover the usage of all these packages and will only give a few examples
 
 You know some of these packages, for instance [NumPy](http://www.numpy.org/) and [Matplotlib](http://matplotlib.org/); we have used them in previous chapters.
 
-We also use partly [IPython](http://ipython.org/) when using jupyter notebooks.
+We also use partly [IPython](http://ipython.org/) when using jupyter notebooks. [pandas](http://pandas.pydata.org/) is one of the best options for 
+working with tabular data in Python. The Pandas library provides data structures, produces high quality plots with [matplotlib](http://matplotlib.org/) and integrates nicely with other 
+libraries that use [NumPy](http://www.numpy.org/) arrays. If you want to know more about pandas, have a look at the following tutorials/Carpentry lessons:
+
+- [Python for ecologists](http://www.datacarpentry.org/python-ecology-lesson/), 
+- [Plotting an Programming in Python](https://swcarpentry.github.io/python-novice-gapminder) 
+- [Vector Data processing Using Python Tools](https://geohackweek.github.io/vector/).
 
 The usage of [nose](https://nose.readthedocs.org/en/latest/) and [Sympy](http://www.sympy.org/) are both outside the scope of this lesson.
-
-
-
-# pandas and geopandas
-
-Several parts of this lessons were copied from [Python for ecologists](http://www.datacarpentry.org/python-ecology-lesson/), [Plotting an Programming in Python](https://swcarpentry.github.io/python-novice-gapminder) and
-[Vector Data processing Using Python Tools](https://geohackweek.github.io/vector/).
-
-## Pandas in Python
-
-One of the best options for working with tabular data in Python is to use the [Python Data Analysis Library](http://pandas.pydata.org/) (a.k.a. Pandas). 
-The Pandas library provides data structures, produces high quality plots with [matplotlib](http://matplotlib.org/) and integrates nicely with other 
-libraries that use [NumPy](http://www.numpy.org/) arrays.
-
-To import the `pandas` library:
-
-~~~
-import pandas as pd
-~~~
-{: .python}
-
-It is very common to give `pd` as a nickname for `pandas` to shorten the command. This means we don’t have to type out pandas each time we call a Pandas function.
-
-`pandas` can handle a large variety of data formats ranging from `csv` to `HDF5` and `JSON`:
-
-
-## Geopandas in Python
-
-Geopandas is not part of the official SciPy ecosystem but has a number of features that can ease our work when manipulating spatio-temporal data.
 
 # SciPy
 
@@ -96,68 +71,179 @@ If any one of these 3 assumptions are violated, then k-means will not be correct
 On major decision you have to take when using K-means is to choose the number of cluster a priori. However, as we will see below, this choice is critical
 and has a strong influence on the results:
 
-Let's take the following image as an example:
+Let's take the following example where we apply K-means for different number of clusters on a netCDF file containing 
+Monthly Average Precipitable Water over Ice-Free Oceans (kg m-2) October 2009:
 
-<img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/84000/84630/columbia_oli_2014183_geo.tif" width="400" alt="clustering K-means" align="middle">
-
-
-**Source: https://landsat.visibleearth.nasa.gov/view.php?id=84630**
-
-An apply K-means for different number of clusters:
 
 ~~~
-import gdal, gdalconst
+import netCDF4
 import numpy as np
 from scipy.cluster.vq import *
+from matplotlib import colors as c
 import matplotlib.pyplot as plt
 %matplotlib inline
 
-# Read Landsat image image into Numpy Array
-filename="columbia_oli_2014183_geo.tiff"
-datafile = gdal.Open(filename, gdalconst.GA_ReadOnly)
+f = netCDF4.Dataset('tpw_v07r01_200910.nc4.nc', 'r')
+lats = f.variables['latitude']
+lons = f.variables['longitude']
+pw = f.variables['precipitable_water'][0,:,:]
 
-dataraster = datafile.GetRasterBand(1).ReadAsArray()
+f.close()
 # Flatten image to get line of values
-flatraster = dataraster.flatten()
+flatraster = pw.flatten()
+flatraster.mask = False
+flatraster = flatraster.data
 
 # Create figure to receive results
 fig = plt.figure(figsize=[20,7])
 fig.suptitle('K-Means Classification')
 
-# In first subplot add original Landsat image
+# In first subplot add original image
 ax = plt.subplot(241)
 ax.axis('off')
-ax.set_title('Original Image')
-ax.imshow(dataraster, cmap='gray', interpolation='nearest', aspect='auto')
-
+ax.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
+original=ax.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
+plt.colorbar(original, cmap='rainbow', ax=ax, orientation='vertical')
 # In remaining subplots add k-means classified images
+# Define colormap
+list_colors=['blue','orange', 'green', 'magenta', 'cyan', 'gray', 'red', 'yellow']
 for i in range(7):
     print("Calculate k-means with ", i+2, " cluster.")
     
     #This scipy code classifies k-mean, code has same length as flattened
-    #Landsat raster and defines which class the landsat value corresponds to
+    # raster and defines which class the value corresponds to
     centroids, variance = kmeans(flatraster.astype(float), i+2)
     code, distance = vq(flatraster, centroids)
     
-    #Since code contains the classified values, reshape into Landsat image dimensions
-    codeim = code.reshape(dataraster.shape[0], dataraster.shape[1])
+    #Since code contains the classified values, reshape into SAR dimensions
+    codeim = code.reshape(pw.shape[0], pw.shape[1])
     
     #Plot the subplot with (i+2)th k-means
     ax = plt.subplot(2,4,i+2)
-    plt.axis('off')
+    ax.axis('off')
     xlabel = str(i+2) , ' clusters'
     ax.set_title(xlabel)
-    plt.imshow(codeim, interpolation='nearest', aspect='auto', cmap='jet')
-    
+    bounds=range(0,i+2)
+    cmap = c.ListedColormap(list_colors[0:i+2])
+    kmp=ax.imshow(codeim, interpolation='nearest', aspect='auto', cmap=cmap,  origin='lower')
+    plt.colorbar(kmp, cmap=cmap,  ticks=bounds, ax=ax, orientation='vertical')
 plt.show()
 ~~~
 {: .python}
 
+The netCDF file we used can be freely downloaded at [here](https://ghrc.nsstc.nasa.gov/hydro/details/rss1tpwnv7r01).
 
-
-<img src="{{ page.root }}/fig/columbia_oli_2014183_clusters.png" width="400" alt="clustering K-means" align="middle">
+<img src="{{ page.root }}/fig/tpw_v07r01_200910_clusters.png" width="800" alt="clustering K-means" align="middle">
 
 > ## K-means limitations
 > See [here](http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_assumptions.html#example-cluster-plot-kmeans-assumptions-py) 
 > what can happen if you do not choose the "right" number of clusters or when your data do not K-means assumptions. 
 {: .callout}
+
+
+~~~
+import netCDF4
+import numpy as np
+from scipy.cluster.vq import *
+from matplotlib import colors as c
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+np.random.seed((1000,2000))
+
+f = netCDF4.Dataset('tpw_v07r01_200910.nc4.nc', 'r')
+lats = f.variables['latitude']
+lons = f.variables['longitude']
+pw = f.variables['precipitable_water'][0,:,:]
+
+f.close()
+# Flatten image to get line of values
+flatraster = pw.flatten()
+flatraster.mask = False
+flatraster = flatraster.data
+
+
+# In first subplot add original image
+fig, (ax1, ax2, ax3)  = plt.subplots(3, sharex=True)
+
+# Create figure to receive results
+fig.set_figheight(20)
+fig.set_figwidth(15)
+
+fig.suptitle('K-Means Classification')
+ax1.axis('off')
+ax1.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
+original=ax1.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
+plt.colorbar(original, cmap='rainbow', ax=ax1, orientation='vertical')
+# In remaining subplots add k-means classified images
+# Define colormap
+list_colors=['blue','orange', 'green', 'magenta', 'cyan', 'gray', 'red', 'yellow']
+
+print("Calculate k-means with 6 clusters.")
+    
+#This scipy code classifies k-mean, code has same length as flattened
+# raster and defines which class the value corresponds to
+centroids, variance = kmeans(flatraster.astype(float), 6)
+code, distance = vq(flatraster, centroids)
+    
+#Since code contains the classified values, reshape into SAR dimensions
+codeim = code.reshape(pw.shape[0], pw.shape[1])
+    
+#Plot the subplot with 4th k-means
+ax2.axis('off')
+xlabel = '6 clusters'
+ax2.set_title(xlabel)
+bounds=range(0,6)
+cmap = c.ListedColormap(list_colors[0:6])
+kmp=ax2.imshow(codeim, interpolation='nearest', aspect='auto', cmap=cmap,  origin='lower')
+plt.colorbar(kmp, cmap=cmap,  ticks=bounds, ax=ax2, orientation='vertical')
+
+#####################################
+
+thresholded = np.zeros(codeim.shape)
+thresholded[codeim==3]=1
+thresholded[codeim==5]=2
+
+#Plot only values == 5
+ax3.axis('off')
+xlabel = 'Keep the fifth cluster only'
+ax3.set_title(xlabel)
+bounds=range(0,2)
+cmap = c.ListedColormap(['white', 'green', 'cyan'])
+kmp=ax3.imshow(thresholded, interpolation='nearest', aspect='auto', cmap=cmap,  origin='lower')
+plt.colorbar(kmp, cmap=cmap,  ticks=bounds, ax=ax3, orientation='vertical')
+
+plt.show()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/tpw_v07r01_200910_cluster5.png" width="800" alt="clustering K-means" align="middle">
+
+
+~~~
+from scipy.spatial import distance
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+from skimage import measure
+
+
+# Find contours at a constant value of 2.0
+contours = measure.find_contours(thresholded, 1.0)
+
+# Display the image and plot all contours found
+
+fig = plt.figure(figsize=[20,7])
+ax = plt.subplot()
+ax.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
+original=ax.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
+plt.colorbar(original, cmap='rainbow', ax=ax, orientation='vertical')
+for n, contour in enumerate(contours):
+    dists = distance.cdist(contour, contour, 'euclidean')
+    if dists.max() > 200:
+        ax.plot(contour[:, 1], contour[:, 0], linewidth=2, color='black')
+        print(dists.max())
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/tpw_v07r01_200910_cluster_biggest.png" width="800" alt="clustering K-means" align="middle">
