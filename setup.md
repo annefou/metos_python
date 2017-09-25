@@ -80,13 +80,14 @@ If you run into any difficulties, please request help before the workshop begins
 
 The data we will be using is a small dataset created for this lesson. 
 To obtain it, download and unzip the file 
-[metos-python-data.zip]({{page.root}}/files/metos-python-data.zip).
+[metos-python-data.tar](https://zenodo.org/record/995709/files/metos-python-data.tar).
+
 In order to follow the presented material, you should launch a Jupyter 
 notebook in the root directory (see [Starting Python](#Starting-Python)).
 
 ## Starting Python
 
-At the beginning of the lesson, we will teach Python  using the [Jupyter notebook][jupyter], a 
+We will teach Python using the [Jupyter notebook][jupyter], a 
 programming environment that runs in a web browser. Jupyter requires a reasonably 
 up-to-date browser, preferably a current version of Chrome, Safari, or Firefox 
 (note that Internet Explorer version 9 and below are *not* supported). If you 
