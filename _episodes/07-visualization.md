@@ -168,11 +168,11 @@ However, there is a number of limitations as described in the [documentation](ht
 
 
 
-> ### Other interesting python packages 
+> ## Other interesting python packages 
 >
 > Packages that are worth to mention for analyzing spatio-temporal data:
 > 
-> - "matplotlib, geopandas, pynio & pyngl, pyqgis, plotly, bokeh & gmap, cartopy, iris"
+> - "matplotlib, geopandas, pynio & pyngl, pyqgis, plotly, bokeh, gmaps, folium, cartopy, iris"
 > - "nodebox-opengl - For playing around with animations"
 > - "pandas, pytables, fiona, descartes, pyproj"
 {: .callout}
