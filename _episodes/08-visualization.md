@@ -3,14 +3,12 @@ title: "Visualize and Publish with Python"
 teaching: 0
 exercises: 0
 questions:
-- "How to create interactive plots and publish them on the web?"
+- "How to create animation plots and publish them on the web?"
 objectives:
-- "Learn how to create interactive plots (2D and 3D) with python"
-- "Learn how to create a dashboard"
-- "Learn to publish your python notebook on the web (git and nbviewer)"
+- "Learn how to create simple animations with python"
+- "Learn to publish your python notebook on the web (gist and nbviewer)"
 keypoints:
 - "Get an overview of nbviewer"
-- "Get an overview of plotly to publish plots on the web"
 ---
 
 # Save your animations in `mp4`
@@ -140,9 +138,6 @@ For instance, the jupyter notebook generated has been shared and can be viewed [
 > according there is no interactive features or any javascript embedded, github will automatically show your jupyter notebook.
 >
 {: .callout}
-
-# Plotly for creating simple python dashboards
-
 
 
 
