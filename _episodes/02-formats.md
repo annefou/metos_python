@@ -866,7 +866,7 @@ Let's take an example; a GeoTIFF MODIS image showing Southern Norway and Sweden 
 
 <img src="{{ page.root }}/fig/Southern_Norway_and_Sweden.2017229.terra.1km.png" width="600" alt="MODIS Aqua 1km over Southern Norway and Sweden" align="middle">
 
-*Source: [MODIS Aqua 1km over Southern Norway and Sweden](https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.aqua.1km*
+*Source: [MODIS Aqua 1km over Southern Norway and Sweden](https://lance3.modaps.eosdis.nasa.gov/imagery/subsets/?subset=Southern_Norway_and_Sweden.2017229.aqua.1km)*
 
 We cannot use netCDF4 python package to read/write GeoTIFF data files but we can use the [Geospatial Data Abstraction Library](http://www.gdal.org/) (GDAL) tools and library to inspect this file. 
 This additional package needs to be installed (see [setup instructions]({{ page.root }}/setup/)).
