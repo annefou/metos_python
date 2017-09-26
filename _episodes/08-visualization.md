@@ -132,12 +132,39 @@ beforehand if you don't have a github account yet).
 
 For instance, the jupyter notebook generated has been shared and can be viewed [here](http://nbviewer.jupyter.org/gist/annefou/5e5750b90a99b5d6b3de9f328a77dccc).
 
-> ### Rendering jupyter notebook on github
+> ## Rendering jupyter notebook on github
 > 
 > You can also store your jupyter notebook on github (and you are strongly encouraged to use a version control to keep your programs...) and
 > according there is no interactive features or any javascript embedded, github will automatically show your jupyter notebook.
 >
 {: .callout}
+
+# GEOJSON 
+
+A very simple way to visualize and explore GeoJSON files is to store them on github because gitHub supports 
+[rendering geoJSON and topoJSON map files](http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html) 
+within GitHub repositories. 
+
+Once available in your github repository, you can use your browser to visualize and share your GEOJSON plot. The final url depends on your github username:
+
+~~~
+<script src="https://embed.github.com/view/geojson/<username>/<repo>/<ref>/<path_to_file>"></script>
+~~~
+{: .bash}
+
+For instance, the file `no-all-all.geojson` has been stored in the lesson repository at [https://github.com/annefou/metos_python/blob/gh-pages/data/no-all-all.geojson](https://github.com/annefou/metos_python/blob/gh-pages/data/no-all-all.geojson).
+
+Then to visualize it, use:
+
+~~~
+<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson>"></script>
+~~~
+{: .bash} 
+
+
+<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson>"></script>
+
+However, there is a number of limitations as described in the [documentation](http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html).
 
 
 
