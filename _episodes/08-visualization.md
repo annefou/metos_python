@@ -162,7 +162,7 @@ Then to visualize it, use:
 {: .bash} 
 
 
-<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson>"></script>
+<script src="https://embed.github.com/view/geojson/annefou/metos_python/gh-pages/data/no-all-all.geojson"></script>
 
 However, there is a number of limitations as described in the [documentation](http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html).
 
