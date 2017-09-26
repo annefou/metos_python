@@ -118,9 +118,31 @@ HTML(ani.to_html5_video())
 
 # Share your jupyter notebooks (nbviewer)
 
+To be able to share your jupyter notebook:
 
+- Save your jupyter notebook on your local computer (rename it as `share_your_notebook_DC.ipynb`); 
+the extension `ipynb` is the default extension for a jupyter notebook and you usually do not need to add it (added automatically)
+- Open your saved notebook file (`share_your_notebook_DC.ipynb`) with your favorite editor and copy its content
+- Open a new window in your web browser at [http://www.github.com](http://www.github.com) and login with your github username and password (you need to register 
+beforehand if you don't have a github account yet).
+- Open another window or tab in your web browser at [https://gist.github.com/](https://gist.github.com/) 
+- Paste the content in the main window and add a title and a description
+- Click on `Create public gist`
+- Copy the `gist key` that appears in your url (it has been generated when you clicked on `create public key`)
+- Go to  [http://nbviewer.jupyter.org](http://nbviewer.jupyter.org) and paste your `gist key` and click on `Go!`
+- Then you can share the resulting url 
+
+For instance, the jupyter notebook generated has been shared and can be viewed [here](http://nbviewer.jupyter.org/gist/annefou/5e5750b90a99b5d6b3de9f328a77dccc).
+
+> ### Rendering jupyter notebook on github
+> 
+> You can also store your jupyter notebook on github (and you are strongly encouraged to use a version control to keep your programs...) and
+> according there is no interactive features or any javascript embedded, github will automatically show your jupyter notebook.
+>
+{: .callout}
 
 # Plotly for creating simple python dashboards
+
 
 
 
