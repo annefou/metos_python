@@ -451,10 +451,10 @@ $ conda install cartopy holoviews datashader dill
 {: .bash}
 
 
-### ipyleaflet
+### ipyleaflet and gmaps
 
 ~~~
-$ conda install ipyleaflet
+$ conda install ipyleaflet gmaps
 ~~~
 {: .bash}
 
