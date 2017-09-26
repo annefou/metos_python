@@ -449,3 +449,12 @@ $ conda install xarray dask
 $ conda install cartopy holoviews datashader dill
 ~~~
 {: .bash}
+
+
+### ipyleaflet
+
+~~~
+$ conda install ipyleaflet
+~~~
+{: .bash}
+
