@@ -153,6 +153,8 @@ If you want to learn more on this subject, read this blog [here](http://www.unid
 >
 {: .callout}
   
+## netCDF/HDF Data compression
+
 In addition to data chunking, you can compress netCDF/HDF variables on the fly. HDF5 can usually reach easily very good compression level when using 
  `szip` library (to get this functionality, netCDF-4 and HDF5 need to be compiled with `szip`library).
 

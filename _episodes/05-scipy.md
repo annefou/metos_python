@@ -247,3 +247,94 @@ for n, contour in enumerate(contours):
 {: .python}
 
 <img src="{{ page.root }}/fig/tpw_v07r01_200910_cluster_biggest.png" width="800" alt="clustering K-means" align="middle">
+
+# Save contours in a shapefile
+
+To save the resulting contours, we need to get the coordinates of each point of the contour and create a polygon. We start from the preceding code and add
+the computation of the coordinates in lat/lon and store them in a shapefile, using `shapely and geopandas` python packages:
+
+~~~
+from scipy.spatial import distance
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+from skimage import measure
+import geopandas as gpd
+from fiona.crs import from_epsg
+from shapely import geometry
+
+
+# Find contours at a constant value of 2.0
+contours = measure.find_contours(thresholded, 1.0)
+
+# Create an empty geopandas GeoDataFrame
+newdata = gpd.GeoDataFrame()
+# Create a new column called 'geometry' to the GeoDataFrame
+newdata['geometry'] = None
+# Set the GeoDataFrame's coordinate system to WGS84
+newdata.crs = from_epsg(4326)
+
+# Display the image and plot all contours found
+
+fig = plt.figure(figsize=[20,7])
+ax = plt.subplot()
+ax.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
+original=ax.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
+plt.colorbar(original, cmap='rainbow', ax=ax, orientation='vertical')
+
+ncontour=0
+
+for n, contour in enumerate(contours):
+    dists = distance.cdist(contour, contour, 'euclidean')
+    if dists.max() > 200:
+        ax.plot(contour[:, 1], contour[:, 0], linewidth=2, color='black')
+        # Approximate latitudes/longitudes of the contour
+        coords = []
+        for c in contour:
+            if int(c[0]) == c[0]:
+                lat = lats[int(c[ 0])]
+            else:
+                lat = (lats[int(c[ 0])] + lats[int(c[0])+1])/2.0
+            
+            if int(c[1]) == c[1]:
+                lon = lons[int(c[ 1])]
+            else:
+                lon = (lons[int(c[ 1])] + lons[int(c[1])+1])/2.0
+            
+            coords.append([lon,lat])
+        
+        poly = geometry.Polygon([[c[0], c[1]] for c in coords])
+        newdata.loc[ncontour, 'geometry'] = poly
+        
+        newdata.loc[ncontour,'idx_name'] = 'contour_' + str(ncontour)
+        print(ncontour)
+        print(dists.max())
+        ncontour += 1
+        
+# Write the data into that Shapefile
+newdata.to_file("contour_test.shp")
+~~~
+{: .python}
+
+Then we can plot it:
+
+~~~
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+fig = plt.figure(figsize=[12,15])  # a new figure window
+ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+
+map = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+            llcrnrlon=0,urcrnrlon=360,resolution='c')
+
+map.drawmapboundary(fill_color='aqua')
+map.fillcontinents(color='#ffe2ab',lake_color='aqua')
+map.drawcoastlines()
+
+contour_test= map.readshapefile('contour_test', 'contour_test', linewidth=2.0, color="red")
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/contour_test.png" width="500" alt="raster concept" align="middle">
