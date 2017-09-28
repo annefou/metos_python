@@ -114,6 +114,82 @@ HTML(ani.to_html5_video())
 
 <video src="{{ page.root }}/fig/writer_ECMWF_EI_VO_850hPa_2001060100.mp4" poster="{{ page.root }}/fig/EI_VO850hPa_2001060100.png" width="400" controls preload></video>
 
+# Make your jupyter notebook interactive with Jupyter Widgets
+
+Instead of creating a movie, you can allow users to select themselves which plots to show:
+
+~~~
+def drawmap(llons,llats,VO, title):
+    
+    
+    fig = plt.figure(figsize=[12,15])  # a new figure window
+    ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
+
+
+    map = Basemap(projection='merc',llcrnrlat=38,urcrnrlat=76,\
+            llcrnrlon=-65,urcrnrlon=30, resolution='c', ax=ax)
+    
+    ax.set_title(title, fontsize=14)
+
+    map.drawcoastlines()
+    map.fillcontinents(color='#ffe2ab')
+# draw parallels and meridians.
+    map.drawparallels(np.arange(-90.,91.,20.))
+    map.drawmeridians(np.arange(-180.,181.,10.))
+    map.drawparallels(np.arange(-90.,120.,30.),labels=[1,0,0,0])
+# make a color map of fixed colors
+    cmap = c.ListedColormap(['#00004c','#000080','#0000b3','#0000e6','#0026ff','#004cff',
+                         '#0073ff','#0099ff','#00c0ff','#00d900','#33f3ff','#73ffff','#c0ffff', 
+                         (0,0,0,0),
+                         '#ffff00','#ffe600','#ffcc00','#ffb300','#ff9900','#ff8000','#ff6600',
+                         '#ff4c00','#ff2600','#e60000','#b30000','#800000','#4c0000'])
+    bounds=[-200,-100,-75,-50,-30,-25,-20,-15,-13,-11,-9,-7,-5,-3,3,5,7,9,11,13,15,20,25,30,50,75,100,200]
+    norm = c.BoundaryNorm(bounds, ncolors=cmap.N) # cmap.N gives the number of colors of your palette
+    
+    x,y = map(llons,llats)
+
+    cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp', zorder=2, ax=ax)
+
+    return cs
+    
+def myanimate(i, llons,llats,VO):
+    #ax.clear()
+    print(VO.min(),VO.max())
+    # change VO (randomly...)
+    VO += 0.1 * np.random.randn()
+    new_contour = drawmap(llons,llats,VO, 'ECMWF ERA-Interim VO at 850 hPa: Frame %03d'%(i) ) 
+    
+	
+    
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import colors as c
+%matplotlib inline
+from mpl_toolkits.basemap import Basemap, shiftgrid
+import numpy as np
+import netCDF4
+from ipywidgets import interact
+
+
+
+f = netCDF4.Dataset('EI_VO_850hPa_Summer2001.nc', 'r')
+lats = f.variables['lat'][:]
+lons = f.variables['lon'][:]
+VO = f.variables['VO'][0,0,:,:]*100000  # read first time and unique level
+
+# shift data so lons go from -180 to 180 instead of 0 to 360.
+VO,lons = shiftgrid(180.,VO,lons,start=False)
+llons, llats = np.meshgrid(lons, lats)
+
+f.close()
+
+@interact(time=(0,50))
+def finteract(time):
+     ca = myanimate(time, llons,llats,VO)
+
+~~~
+{: .python}
+
 # Share your jupyter notebooks (nbviewer)
 
 To be able to share your jupyter notebook:

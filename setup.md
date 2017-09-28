@@ -437,7 +437,7 @@ $ conda install scipy scikit-learn scikit-image
 ### xarray and dask
 
 ~~~
-$ conda install xarray dask
+$ conda install xarray dask=0.15.2
 ~~~
 {: .bash}
 

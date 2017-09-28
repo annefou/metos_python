@@ -50,7 +50,7 @@ last_time=t[t.size-1]
 VO=data[0,:,:,:]
 
 appendvar = d.variables['VO']
-for nt in range(t.size,t.size+200000):
+for nt in range(t.size,t.size+50):
 # there are 100 times in the file originally
     VO += 0.1 * np.random.randn()
     last_time += 6.0
@@ -219,9 +219,123 @@ src.close()
 >
 {: .callout}
 
-# Parallel computing for spatio-temporal data analysis: xarray and dask
+# Parallel computing for spatio-temporal data analysis: dask
 
 ## [Dask](https://dask.pydata.org/en/latest/) : a flexible parallel computing library for analytic computing
 
 
-Show the very good introduction [Dask: Parallel Computing in Python](http://matthewrocklin.com/slides/strata-london-2017.html#/) made by [Matthew Rocklin](http://matthewrocklin.com/) at [Strata Data Conference 2017](https://conferences.oreilly.com/strata/strata-eu).
+We usually have large dataset to handle; a lot larger than any examples shown so far in this lesson. Using python as we did so far is not possible any longer:
+
+- our files are too large to fit in memory
+- our data processing is too long to be run on a single processor
+
+We have seen that data chunking is very powerful but writing program where we both chunk data and processing can be cumbersome. And to speed-up our 
+processing we need to use more than one processor, so we need a framework which is simple and efficient enough at scale.
+
+Dask is a python library that helps to parallelize computations on big chunks of data. This allows analyzing data that do not fit in to your computer's 
+memory as well as to utilize multiprocessing capabilities of your machine.
+
+See the very good introduction [Dask: Parallel Computing in Python](http://matthewrocklin.com/slides/strata-london-2017.html#/) made by [Matthew Rocklin](http://matthewrocklin.com/) at [Strata Data Conference 2017](https://conferences.oreilly.com/strata/strata-eu).
+
+Let's see how it works with an example:
+
+~~~
+import h5py
+
+f = h5py.File('OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5', 'r')
+dset = f['/HDFEOS/GRIDS/OMI Column Amount O3/Data Fields/ColumnAmountO3']
+print(dset.shape)
+print(type(dset))
+~~~
+{: .python}
+
+~~~
+(720, 1440)
+<class 'h5py._hl.dataset.Dataset'>
+~~~
+{: .output}
+
+So far, we have just open an HDF5 file with `h5py` (this package is a very low level API for reading HDF5 files; it is usually very efficient) and read
+`ColumnAmountO3` (Ozone vertical column density). It's a 2D field, so when we create a `dask` array, we can split it:
+
+~~~
+import dask.array as da
+d_chunks = da.from_array(dset, chunks=(720, 144))
+mx=d_chunks.max()
+~~~
+{: .python}
+
+We haven't computed anything yet as all operations with `dask` are deferred. But we can already see the set of operations necessary to compute the maximum value:
+
+~~~
+mx.visualize()
+~~~
+{: .python}
+
+<img src="{{ page.root }}/fig/dask_h5_max.png" width="500" alt="dask operations" align="middle">
+
+You have to look at the picture from the bottom to the top. At the bottom, you see all your chunks (here 10) and at the top the final result (the maximum 
+value of the entire field).
+
+~~~
+mx.compute()
+~~~
+{: .python}
+
+~~~
+512.79999
+~~~
+{: .output}
+
+Here the set of operations is serialized as we do not run it on a multi-processor computer but with significant changes, you could run similar code with
+large files and on a large number of processors.
+
+And even on your laptop, `dask` can be very useful because it allows out-of-core operations. This mean that if your file does not fit into the memory of your
+computer, you still can run large operation on it; but of couse it will be very slow... 
+
+Let's take another example:
+
+~~~
+import os
+import dask.array as da
+from netCDF4 import Dataset
+from IPython.display import Image
+
+f = Dataset('large.nc')
+VO = da.from_array(f.variables['VO'], chunks=(63,1,256,512))
+print(VO.shape)
+VOmean = VO.mean()   
+print(VOmean)
+VOmean.visualize()
+~~~
+{: .python}
+
+
+<img src="{{ page.root }}/fig/dask_nc_mean.png" width="500" alt="dask operations" align="middle">
+
+~~~
+VOmean.compute()
+~~~
+{: .python}
+
+~~~
+-0.003835564
+~~~
+{: .output}
+
+
+> ## Use dask to compute standard deviation
+>
+>  Use the same `netCDF` file and retrieve the average to the original field
+> using dask. Visualize the graph of tasks before computing it.
+>
+> > ## Solution
+> > 
+> > ~~~
+> > (VO - VO.mean()).visualize()
+> > (VO - VO.mean()).compute()
+> > ~~~
+> > {: .python}
+> > <img src="{{ page.root }}/fig/dask_nc_solution.png" width="500" alt="dask operations" align="middle">
+> {: .solution}
+{: .challenge}
