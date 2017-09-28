@@ -458,3 +458,10 @@ $ conda install ipyleaflet gmaps
 ~~~
 {: .bash}
 
+
+### graphviz
+
+~~~
+$ conda install graphviz python-graphviz
+~~~
+{: .bash}
