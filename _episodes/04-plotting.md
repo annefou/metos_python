@@ -128,6 +128,8 @@ fig = plt.figure()  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
 # set a title for this sub-plot
 ax.set_title('Time series for NAO index', fontsize=14)
+# set tick for x-axis
+ax.set_xticks(dates)
 # set labels for x-ticks (dates) and rotate them (45 degrees) for readability
 ax.set_xticklabels(dates, rotation=45, fontsize=10 )
 # set a title for x-axis
@@ -153,6 +155,8 @@ ax.plot(dates, nao_index)
 > ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
 > # set a title for this sub-plot
 > ax.set_title('Time series for NAO index', fontsize=14)
+> # set tick for x-axis
+> ax.set_xticks(dates)
 > # set labels for x-ticks (dates) and rotate them (45 degrees) for readability
 > ax.set_xticklabels(dates, rotation=45, fontsize=10 )
 > # set a title for x-axis
