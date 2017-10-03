@@ -1,4 +1,4 @@
-# metos_python
+# Python for analyzing and visualizing spatio-temporal data
 
 
 These lessons will introduce you to Python for analyzing and visualizing spatio-temporal data. 
@@ -7,6 +7,7 @@ We are using datasets from the environmental sciences that are freely available.
 These lessons have been developed at the University of Oslo by **Ana Costa Conrado**, **Gladys Nalvarte** and **Anne Fouilloux**.
 
 Who: The course is aimed at graduate students and other researchers. 
+
 Prerequisites:
 
 Learners need to understand what files and directories are and what a working directory is. These concepts are covered in the [Unix Shell lesson](http://swcarpentry.github.io/shell-novice/).
