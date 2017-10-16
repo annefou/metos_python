@@ -15,7 +15,9 @@ dependencies:
   - plotly
   - ffmpeg
   - pillow
-  - scipy scikit-learn scikit-image
+  - scipy 
+  - scikit-learn 
+  - scikit-image
   - xarray 
   - dask=0.15.2
   - cartopy
