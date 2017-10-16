@@ -1,0 +1,28 @@
+name: metos-environment
+
+dependencies:
+  - python=3.6
+  - numpy
+  - matplotlib
+  - pandas
+  - netcdf4
+  - hdf5
+  - gdal
+  - basemap
+  - basemap-data-hires
+  - geopandas 
+  - pytables
+  - plotly
+  - ffmpeg
+  - pillow
+  - scipy scikit-learn scikit-image
+  - xarray 
+  - dask=0.15.2
+  - cartopy
+  - holoviews
+  - datashader
+  - dill
+  - ipyleaflet
+  - gmaps
+  - graphviz
+  - python-graphviz
