@@ -1,7 +1,6 @@
 name: metos-environment
 
 dependencies:
-  - python=3.6
   - numpy
   - matplotlib
   - pandas
