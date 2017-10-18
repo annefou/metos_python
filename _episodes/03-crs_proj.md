@@ -218,7 +218,8 @@ We can view the same data above, in another CRS - `Robinson`. `Robinson` is a
 different shape compared to the map that we created above in the `CRS`:  
 **Geographic lat/long WGS84**.
 
-~~~
+
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 import matplotlib.pyplot as plt
@@ -232,8 +233,7 @@ map.drawmeridians(np.arange(0.,420.,60.),labels=[0,0,0,1]) # draw meridians
 map.drawmapboundary(fill_color='aqua',zorder=0)
 plt.title("Global Map: Robinson Projection \n Units: Degrees - Latitudes/Longitudes")
 plt.show()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/robinson-example-2.png">
 
