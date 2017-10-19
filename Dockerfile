@@ -13,5 +13,4 @@ USER main
 ADD environment.yml environment.yml
 
 RUN /home/main/anaconda/envs/python3/bin/conda env create -f environment.yml
-RUN wget https://zenodo.org/record/995709/files/metos-python-data.tar &&
-tar xvf metos-python-data.tar && cd metos-python-data 
+RUN wget https://zenodo.org/record/995709/files/metos-python-data.tar && tar xvf metos-python-data.tar && cd metos-python-data 
