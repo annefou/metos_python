@@ -1,5 +1,8 @@
 name: metos-environment
 
+channels:
+  - conda-forge
+
 dependencies:
   - numpy
   - matplotlib
