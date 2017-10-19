@@ -49,12 +49,11 @@ Actually this is what we will need to do when we create more than one figure!
 A figure can contain several plots (also called sub-plots) so the first thing to do is to choose how many sub-plots your figure will contain. This is done
 with the `add_subplot` method of an object of type `figure`:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 fig = plt.figure()  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
-~~~
-{: .python}
+</pre>
 
 The resulting figure is:
 
@@ -69,7 +68,7 @@ Then we use the `ax` object to customize our subplot and finally plot data. For 
 - a title for x-axis and y-axis
 - ticks at chosen location for x-axis and y-axis
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -91,8 +90,7 @@ ax.set_yticklabels(np.arange(5), rotation=45, fontsize=10 )
 ax.set_ylabel("title for y-axis")
 # choose where and how many ticks on the y-axes
 ax.set_yticks(np.arange(0, 5, 1.0))
-~~~
-{: .python}
+</pre>
 
 
  
@@ -103,7 +101,7 @@ ax.set_yticks(np.arange(0, 5, 1.0))
 Our goal is to plot a timeserie for North Atlantic Oscillation (NAO) index. We take first sample data i.e. NAO indices
 for 10 days only from the 1st of June 2001 to the 10th of June 2001:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import datetime
 dates = [datetime.date( 2001,6,1), 
      datetime.date( 2001,6,2),
@@ -117,13 +115,11 @@ dates = [datetime.date( 2001,6,1),
      datetime.date( 2001,6,10)]
 # NAO index for each date
 nao_index = [ 0.132, -0.058, -0.321, -0.395, -0.216, -0.082, -0.023, -0.012, -0.012, -0.02]
-~~~
-{: .python}
+</pre>
 
 Then we plot with matplotlib:
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
-%matplotlib inline
 fig = plt.figure()  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
 # set a title for this sub-plot
@@ -138,8 +134,7 @@ ax.set_xlabel("Dates (YYYY-MM-DD)")
 ax.set_ylabel("NAO index")
 # plot nao_index as a function of dates.
 ax.plot(dates, nao_index)
-~~~
-{: .python}
+</pre>
 
  <img src="{{ page.root }}/fig/sample_data_ts.png" width="400" alt="figures and axes" align="middle">
  
@@ -264,10 +259,10 @@ This part is out of scope of this tutorial and we provide a sample data set in n
 
 <br>
 Let's plot it on a world map:
-~~~
+
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 from matplotlib import colors as c
-%matplotlib inline
 from mpl_toolkits.basemap import Basemap, shiftgrid
 
 import numpy as np
@@ -309,16 +304,15 @@ cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp')
 ## make a color bar
 fig.colorbar(cs, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds, ax=ax, orientation='horizontal')
 f.close()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/EI_VO850hPa_2001060100_global.png" width="400" alt="figures and axes" align="middle">
 
 And to zoom over a user-defined area:
-~~~
+
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 from matplotlib import colors as c
-%matplotlib inline
 from mpl_toolkits.basemap import Basemap, shiftgrid
 
 import numpy as np
@@ -360,8 +354,7 @@ cs = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp')
 ## make a color bar
 fig.colorbar(cs, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds, ax=ax, orientation='horizontal')
 f.close()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/EI_VO850hPa_2001060100.png" width="400" alt="figures and axes" align="middle">
 
@@ -523,9 +516,8 @@ axes = mark_inset(ax, axins, loc1=2, loc2=4,
 A simple way to plot a GeoTIFF image and eventually overlay additional field/information is to use the same projection as the GeoTIFF file:
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
-%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 from osgeo import gdal
 import numpy as np
@@ -566,16 +558,14 @@ map = Basemap(projection='cyl',llcrnrlat=ymin,urcrnrlat=ymax,\
 map.imshow(img, origin='upper', ax=ax)
 map.drawcountries(color='blue', linewidth=1.5, ax=ax)
 map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
-~~~
-{: .python}
-
+</pre>
 
 <img src="{{ page.root }}/fig/geotiff_plot_basemap.png" alt="geotiff plot on cylindrical map" align="middle">
 
 And if we would like to use `pcolormesh` instead of `imshow`:
-~~~
+
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
-%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 from osgeo import gdal
 import numpy as np
@@ -619,8 +609,7 @@ map = Basemap(projection='cyl',llcrnrlat=ymin,urcrnrlat=ymax,\
 map.pcolormesh(lon_source,lat_source,bnd1.T, cmap='bone')
 map.drawcountries(color='blue', linewidth=1.5, ax=ax)
 map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/geotiff_plot_basemap_pcolormesh.png" alt="geotiff plot on cylindrical map" align="middle">
 
@@ -628,7 +617,7 @@ As we can see on the figure above, using the projection of the GeoTIFF file is n
 we need to convert the coordinates taking the projection of our raster (here GeoTIFF) as the source and the projection defined in our 
 Basemap object as the target coordinate system.
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 %matplotlib inline
 from mpl_toolkits.basemap import Basemap
@@ -679,8 +668,7 @@ print("shape lon and lat_source: ", lon_source.shape, lat_source.shape,bnd1.T.sh
 map.pcolormesh(x,y,bnd1.T,color=color_tuple)
 map.drawcountries(color='blue', linewidth=1.5, ax=ax)
 map.drawcoastlines(linewidth=1.5, color='red', ax=ax)
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/geotiff_plot_basemap_reprojected.png" alt="geotiff plot on mercator map" align="middle">
 
@@ -707,10 +695,9 @@ We will see how to visualize GeoJSON file in our last chapter when publishing on
 Shapefiles can be complex to visualize depending on what type of shapefile (points, lines, etc.). However, matplotlib has a very simple way to handle
 shapefiles with lines or polygons. Let's take back an example from [our chapter on data formats](https://annefou.github.io/metos_python/02-formats/).
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-%matplotlib inline
 
 fig = plt.figure(figsize=[12,15])  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
@@ -725,9 +712,7 @@ map.drawcoastlines()
 norway_roads= map.readshapefile('Norway_railways/railways', 'railways')
 
 plt.show()
-~~~
-{: .python}
-
+</pre>
 
 <img src="{{ page.root }}/fig/Norway_railways_shapefile.png" alt="vector plot" align="middle">
 
@@ -746,12 +731,11 @@ norway_roads= map.readshapefile('Norway_railways/railways', 'railways', color='r
 
 Often, this approach is not flexible enough... 
 
-Let's take `` as an example:
+Let's take an example:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-%matplotlib inline
  
 fig = plt.figure(figsize=[12,15])  # a new figure window
 ax = fig.add_subplot(1, 1, 1)      # specify (nrows, ncols, axnum)
@@ -766,8 +750,7 @@ map.drawcoastlines()
 norway_natural= map.readshapefile('NOR_adm/NOR_adm', 'NOR_adm', color='blue',  drawbounds=True)
 
 plt.show()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/NOR_adm_shapefile.png" alt="vector plot" align="middle">
 
@@ -777,7 +760,7 @@ plt.show()
 For instance, if we wish to fill polygons with different colors depending on the county, we can go through our shapefile and choose the
 color for each county. In our shapefile `NOR_adm` county can be identified by their names (`NAME_1`) or their associated identifier (`ID_1`):
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from osgeo import ogr
 
 shapedata = ogr.Open('NOR_adm')
@@ -795,8 +778,7 @@ for i in range(layer.GetFeatureCount()):
 
 for i in range(0,len(nor_adm),20):
     print(nor_adm[i])
-~~~
-{: .python}
+</pre>
 
 Now we can assign a color for each county and make a plot where ploygons are filled according to the county name:
 

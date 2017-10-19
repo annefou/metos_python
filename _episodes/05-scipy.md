@@ -75,7 +75,7 @@ Let's take the following example where we apply K-means for different number of 
 Monthly Average Precipitable Water over Ice-Free Oceans (kg m-2) October 2009:
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
 import numpy as np
 from scipy.cluster.vq import *
@@ -128,8 +128,7 @@ for i in range(7):
     kmp=ax.imshow(codeim, interpolation='nearest', aspect='auto', cmap=cmap,  origin='lower')
     plt.colorbar(kmp, cmap=cmap,  ticks=bounds, ax=ax, orientation='vertical')
 plt.show()
-~~~
-{: .python}
+</pre>
 
 The netCDF file we used can be freely downloaded at [here](https://ghrc.nsstc.nasa.gov/hydro/details/rss1tpwnv7r01).
 
@@ -141,7 +140,7 @@ The netCDF file we used can be freely downloaded at [here](https://ghrc.nsstc.na
 {: .callout}
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
 import numpy as np
 from scipy.cluster.vq import *
@@ -214,17 +213,16 @@ kmp=ax3.imshow(thresholded, interpolation='nearest', aspect='auto', cmap=cmap,  
 plt.colorbar(kmp, cmap=cmap,  ticks=bounds, ax=ax3, orientation='vertical')
 
 plt.show()
-~~~
-{: .python}
+</pre>
+
 
 <img src="{{ page.root }}/fig/tpw_v07r01_200910_cluster5.png" width="800" alt="clustering K-means" align="middle">
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from scipy.spatial import distance
 import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline
 from skimage import measure
 
 
@@ -243,8 +241,7 @@ for n, contour in enumerate(contours):
     if dists.max() > 200:
         ax.plot(contour[:, 1], contour[:, 0], linewidth=2, color='black')
         print(dists.max())
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/tpw_v07r01_200910_cluster_biggest.png" width="800" alt="clustering K-means" align="middle">
 
@@ -253,11 +250,10 @@ for n, contour in enumerate(contours):
 To save the resulting contours, we need to get the coordinates of each point of the contour and create a polygon. We start from the preceding code and add
 the computation of the coordinates in lat/lon and store them in a shapefile, using `shapely and geopandas` python packages:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from scipy.spatial import distance
 import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline
 from skimage import measure
 import geopandas as gpd
 from fiona.crs import from_epsg
@@ -313,15 +309,13 @@ for n, contour in enumerate(contours):
         
 # Write the data into that Shapefile
 newdata.to_file("contour_test.shp")
-~~~
-{: .python}
+</pre>
 
 Then we can plot it:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-%matplotlib inline
 
 fig = plt.figure(figsize=[12,15])  # a new figure window
 ax = fig.add_subplot(1, 1, 1)  # specify (nrows, ncols, axnum)
@@ -334,7 +328,6 @@ map.fillcontinents(color='#ffe2ab',lake_color='aqua')
 map.drawcoastlines()
 
 contour_test= map.readshapefile('contour_test', 'contour_test', linewidth=2.0, color="red")
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/contour_test.png" width="500" alt="raster concept" align="middle">

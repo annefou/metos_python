@@ -37,7 +37,7 @@ cp EI_VO_850hPa_Summer2001.nc large.nc
 
 And we append additional data to its unlimited dimension (time):
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from netCDF4 import Dataset 
 import numpy as np
 # Read and Append to an existing netCDF file
@@ -57,8 +57,7 @@ for nt in range(t.size,t.size+50):
     appendvar[nt] = VO
     t[nt] = last_time
 d.close()
-~~~
-{: .python}
+</pre>
 
 As you can see writing this dataset is quite slow... but we will see later how we can improve the performance when writing netCDF file. We first look how 
 we can read this file on a laptop with `little` memory.
@@ -68,7 +67,7 @@ we can read this file on a laptop with `little` memory.
 When your netCDF file becomes large, it is unlikely you can fit the entire file into your laptop memory. You can slice your dataset and load it so it can fit 
 into your laptop memory. You can slice netCDF variables using a syntax similar to numpy arrays:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from netCDF4 import Dataset    
 d = Dataset('large.nc', 'r')
 # Do not load dataset yet
@@ -76,8 +75,7 @@ data=d.variables['VO']
 # pick-up a time and read VO
 slice_t=data[1000,:,:,:]
 d.close()
-~~~
-{: .python}
+</pre>
 
 > ## Timeseries
 > 
@@ -100,14 +98,13 @@ d.close()
 
 The elasped time spent to extract your slice strongly depends on how your data has been stored (how the dimensions are organized):
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from netCDF4 import Dataset    
 d = Dataset('large.nc', 'r')
 # print some metadata
 print(d)
 d.close()
-~~~
-{: .python}
+</pre>
 
 ~~~
 <class 'netCDF4._netCDF4.Dataset'>
@@ -160,11 +157,11 @@ In addition to data chunking, you can compress netCDF/HDF variables on the fly. 
 
  Let's take our previous `large.nc` file and rewrite it with compression:
  
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4 as nc
 
-src_file = '../../../../Downloads/large.nc'
-trg_file = '../../../../Downloads/large_compressed.nc'
+src_file = 'large.nc'
+trg_file = 'large_compressed.nc'
 src = nc.Dataset(src_file)
 trg = nc.Dataset(trg_file, mode='w')
 
@@ -188,8 +185,8 @@ for name, var in src.variables.items():
 # Save the file
 trg.close()
 src.close()
-~~~
-{: .python}
+</pre>
+
 
 > ## Data compression: 
 > Use netCDF-4 / HDF-5 Data compression when writing your dataset to save disk space.
@@ -239,15 +236,14 @@ See the very good introduction [Dask: Parallel Computing in Python](http://matth
 
 Let's see how it works with an example:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import h5py
 
 f = h5py.File('OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5', 'r')
 dset = f['/HDFEOS/GRIDS/OMI Column Amount O3/Data Fields/ColumnAmountO3']
 print(dset.shape)
 print(type(dset))
-~~~
-{: .python}
+</pre>
 
 ~~~
 (720, 1440)
@@ -295,7 +291,7 @@ computer, you still can run large operation on it; but of couse it will be very 
 
 Let's take another example:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import os
 import dask.array as da
 from netCDF4 import Dataset
@@ -307,8 +303,7 @@ print(VO.shape)
 VOmean = VO.mean()   
 print(VOmean)
 VOmean.visualize()
-~~~
-{: .python}
+</pre>
 
 
 <img src="{{ page.root }}/fig/dask_nc_mean.png" width="500" alt="dask operations" align="middle">

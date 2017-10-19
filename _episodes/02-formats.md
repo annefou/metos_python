@@ -189,10 +189,9 @@ those covered by Unidata netCDF library.
 
 Start a new jupyter notebook and enter:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
-~~~
-{: .python}
+</pre>
 
 
 
@@ -216,12 +215,11 @@ Then 4 following steps:
 
 #### Create an empty netCDF4 dataset and store it on disk
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
 foo = netCDF4.Dataset('foo.nc', 'w')
 foo.close()
-~~~
-{: .python}
+</pre>
 
 Then you should find a new file called "foo.nc" in your working directory:
 
@@ -247,24 +245,17 @@ The second argument is the mode with which to access the file. Use:
 
 #### Dimensions
 
-Create dimensions on a dataset with the createDimension() method. We first create a new netCDF file:
+Create dimensions on a dataset with the createDimension() method. We first create a new netCDF file but this time we don't close it immediately and create 3 dimensions:
 
-~~~
+
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
 f = netCDF4.Dataset('orography.nc', 'w')
-~~~
-{: .python}
-
-But this time we don't close it immediately and create 3 dimensions:
-
-
-~~~
 f.createDimension('time', None)
 f.createDimension('z', 3)
 f.createDimension('y', 4)
 f.createDimension('x', 5)
-~~~
-{: .python}
+</pre>
 
 The first dimension is called time with unlimited size (i.e. variable values may be appended along the this dimension). 
 Unlimited size dimensions must be declared before (“to the left of”) other dimensions. We usually use only a single unlimited size dimension 
@@ -313,7 +304,16 @@ Variable data in netCDF4 datasets are stored in NumPy array or masked array obje
 An appropriately sized and shaped NumPy array can be loaded into a dataset variable by assigning it to a slice that span the variable:
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
+import netCDF4
+f = netCDF4.Dataset('orography.nc', 'w')
+f.createDimension('time', None)
+f.createDimension('z', 3)
+f.createDimension('y', 4)
+f.createDimension('x', 5)
+lats = f.createVariable('lat', float, ('y', ), zlib=True)
+lons = f.createVariable('lon', float, ('x', ), zlib=True)
+orography = f.createVariable('orog', float, ('y', 'x'), zlib=True, least_significant_digit=1, fill_value=0)
 # create latitude and longitude 1D arrays
 lat_out  = [60, 65, 70, 75]
 lon_out  = [ 30,  60,  90, 120, 150]
@@ -325,8 +325,7 @@ lats[:] = lat_out
 lons[:] = lon_out
 # close file to write on disk
 f.close()
-~~~
-{: .python}
+</pre>
 
 We defined a one-dimensional array data_out and reshape it to a 2 dimensional array and then store it in the orography netCDF variable.
 
@@ -391,7 +390,7 @@ data:
 
 Let's first read the file we previously generated:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import netCDF4
 import numpy as np
 
@@ -403,8 +402,7 @@ print(lats[:])
 print(lons[:])
 print(orography[:])
 f.close()
-~~~
-{: .python}
+</pre>
 
 > ## lats vs. lats[:]?
 >

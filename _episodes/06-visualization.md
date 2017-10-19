@@ -19,7 +19,7 @@ To avoid downloading large datasets on your laptop, we use one frame only and ra
 to create and save your animations in python:
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 def drawmap(ax,map,x,y,VO, cmap, bounds, norm, title):
     
     ax.set_title(title, fontsize=14)
@@ -95,9 +95,7 @@ ani = animation.FuncAnimation(fig, myanimate, frames=np.arange(50),
 ani.save("writer_ECMWF_EI_VO_850hPa_2001060100.mp4")
 
 f.close()
-~~~
-{: .python}
-
+</pre>
 
 # Embedded animations within your jupyter notebook
 
@@ -118,7 +116,7 @@ HTML(ani.to_html5_video())
 
 Instead of creating a movie, you can allow users to select themselves which plots to show:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 def drawmap(llons,llats,VO, title):
     
     
@@ -187,8 +185,7 @@ f.close()
 def finteract(time):
      ca = myanimate(time, llons,llats,VO)
 
-~~~
-{: .python}
+</pre>
 
 # Share your jupyter notebooks (nbviewer)
 

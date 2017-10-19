@@ -115,7 +115,7 @@ units are Degrees and the coordinate system itself is **latitude** and
 the central meridian on the globe (0,0).
 
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 import matplotlib.pyplot as plt
@@ -138,8 +138,8 @@ plt.yticks([-90,-50,0,50,90])
 plt.xlabel('Longitude (Degrees)')
 plt.ylabel('Latitude (Degrees)')
 plt.show()
-~~~
-{: .python}
+</pre>
+
 <img src="{{ page.root }}/fig/lat-long-example-1.png">
 
 We can add three coordinate locations to our map. Note that the UNITS are
@@ -152,7 +152,7 @@ in decimal **degrees** (latitude, longitude):
 Let's create a second map with the locations overlayed on top of the continental
 boundary layer.
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 import matplotlib.pyplot as plt
@@ -187,8 +187,7 @@ plt.xlabel('Longitude (Degrees)')
 plt.ylabel('Latitude (Degrees)')
 
 plt.show()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/add-lat-long-locations-1.png">
 
@@ -240,7 +239,7 @@ plt.show()
 Now what happens if you try to add the same Lat / Long coordinate locations that
 we used above, to our map, with the `CRS` of `Robinsons`?
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
 # lon_0 is central longitude of projection.
 # resolution = 'c' means use crude resolution coastlines.
@@ -248,8 +247,6 @@ map = Basemap(projection='robin',lon_0=0,resolution='c')
 map.drawcoastlines()
 map.fillcontinents(color='black',lake_color='aqua', zorder=1)
 # draw parallels and meridians.
-#map.drawparallels(np.arange(-90.,120.,30.))
-#map.drawmeridians(np.arange(0.,360.,60.))
 map.drawparallels(np.arange(-90.,120.,30.),labels=[1,0,0,0]) # draw parallels
 map.drawmeridians(np.arange(0.,420.,60.),labels=[0,0,0,1]) # draw meridians
 map.drawmapboundary(fill_color='aqua',zorder=0)
@@ -262,8 +259,7 @@ lons = [-105.2519,10.7500,2.9833]
 plt.scatter(lons,lats,s=100, c='red', zorder=2)
 plt.title("Global Map: Robinson Projection")
 plt.show()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/add-robinson-locations-2.png">
 
@@ -272,7 +268,7 @@ in a different `CRS`, that the points are not in the correct location. We need
 to first convert the points to the new projection - a process often referred
 to as **reprojection**.
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 import matplotlib.pyplot as plt
@@ -300,8 +296,7 @@ print(y)
 plt.scatter(x,y,s=100, c='red', zorder=2)
 plt.title("Global Map: Robinson Projection)
 plt.show()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/add-robinson-locations-reprojection-2.png">
 
@@ -318,7 +313,7 @@ page!
 
 <img src="{{ page.root }}/fig/compare_cyl_robin.png" width="400">
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import numpy as np
 import matplotlib.pyplot as plt
@@ -378,8 +373,7 @@ x,y = map(lons,lats)
 axes[1].scatter(x,y,s=100, c='red', zorder=2)
 
 plt.show()
-~~~
-{: .python}
+</pre>
 
 
 ## Why Multiple CRS?
