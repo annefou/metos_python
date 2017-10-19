@@ -5,7 +5,7 @@ MAINTAINER Anne Fouilloux <annefou@geo.uio.no>
 USER root
 
 # Add dependency
-RUN apt-get update && apt-get install -y wget 
+RUN apt-get update && apt-get install -y wget tar
 
 USER main
 
