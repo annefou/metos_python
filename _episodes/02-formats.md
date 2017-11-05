@@ -71,12 +71,13 @@ If you do not have downloaded the metos_python data for this lesson, please see 
 
 In this example, we will be looking at the metadataof a netCDF file. For this we open the netCDF file with the [netCDF4 python](http://unidata.github.io/netcdf4-python/) package you were asked to install. 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from netCDF4 import Dataset
 nc_f = 'tpw_v07r01_200910.nc4.nc'  # Your filename
 nc_fid = Dataset(nc_f, 'r')  # Dataset is the class behavior to open the file
                              # and create an instance of the ncCDF4 class
 print(nc_fid)
+nc_fid.close()
 </pre>
 
 
@@ -185,7 +186,7 @@ Then 4 following steps:
 
 #### Create an empty netCDF4 dataset and store it on disk
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 foo = netCDF4.Dataset('foo.nc', 'w')
 foo.close()
 </pre>
@@ -217,7 +218,7 @@ The second argument is the mode with which to access the file. Use:
 Create dimensions on a dataset with the createDimension() method. We first create a new netCDF file but this time we don't close it immediately and create 3 dimensions:
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 f = netCDF4.Dataset('orography.nc', 'w')
 f.createDimension('time', None)
@@ -239,7 +240,7 @@ Not all datasets are required to have all 4 dimensions.
 
 Create variables on a dataset with the createVariable() method, for example:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 lats = f.createVariable('lat', float, ('y', ), zlib=True)
 lons = f.createVariable('lon', float, ('x', ), zlib=True)
 orography = f.createVariable('orog', float, ('y', 'x'), zlib=True, least_significant_digit=1, fill_value=0)
@@ -274,7 +275,7 @@ Variable data in netCDF4 datasets are stored in NumPy array or masked array obje
 An appropriately sized and shaped NumPy array can be loaded into a dataset variable by assigning it to a slice that span the variable:
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 import numpy as np
 
@@ -302,10 +303,11 @@ f.close()
 We defined a one-dimensional array data_out and reshape it to a 2 dimensional array and then store it in the orography netCDF variable.
 
 Let's have look to the netCDF file we generated and in particular its metadata:
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 f = netCDF4.Dataset('orography.nc', 'r')
 print(f)
+f.close()
 </pre>
 
 ~~~
@@ -343,7 +345,7 @@ root group (NETCDF4 data model, file format HDF5):
 
 Let's first read the file we previously generated:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 import numpy as np
 
@@ -381,7 +383,7 @@ However, there are differences between the NumPy and netCDF variable slicing rul
 [netCDF4-python](http://unidata.github.io/netcdf4-python/) docs for details.
 
 Now if we only want to access a subset of the variable orog:
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 import numpy as np
 
@@ -447,7 +449,7 @@ Unidata maintains [a list](http://www.unidata.ucar.edu/software/netcdf/conventio
 Let's have a look at a netCDF file called `sresa1b_ncar_ccsm3-example.nc` that follows CF conventions.
 If you haven't downloaded this file, see [the setup instructions]({{ page.root }}/setup/):
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 f = netCDF4.Dataset("sresa1b_ncar_ccsm3-example.nc", "r")
 print(f)
@@ -580,7 +582,7 @@ we will only show how to handle HDF files with netCDF4 python package.
 
 Let's first look at **MISR_AM1_CGLS_MAY_2007_F04_0031.hdf** and gets metadata:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from netCDF4 import Dataset
 
 f=Dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf','r')
@@ -608,6 +610,7 @@ print(type(data))
 print(data.shape)
 plt.imshow(data)
 plt.show()
+f.close()
 </pre>
 
 
@@ -648,12 +651,13 @@ Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now ba
 > > 1. `OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5` is an HDF5 file and more precisely HDF-EOS5 
 > >     while `AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf` is and HDF4 file. You can check either
 > > using the `file` command or in python:
-> > <pre data-executable="true" data-language="python">%matplotlib inline
+> > ~~~
 > > from netCDF4 import Dataset
 > > f = Dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
 > > print(f)
-> > </pre>
-> > 
+> > f.close()
+> > ~~~
+> > {: .python}
 > > ~~~
 > > <class 'netCDF4._netCDF4.Dataset'>
 > > root group (NETCDF4 data model, file format HDF5):
@@ -683,27 +687,32 @@ Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now ba
 >
 > > ## Solution
 > > 1. 
-> > <pre data-executable="true" data-language="python">%matplotlib inline
+> > ~~~
+> > %matplotlib inline
 > > from netCDF4 import Dataset
 > > import matplotlib.pyplot as plt
 > > f = Dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
 > > data = f.groups['HDFEOS'].groups['GRIDS'].groups['OMI Column Amount O3'].groups['Data Fields'].variables['ColumnAmountO3']
 > > plt.imshow(data)
 > > plt.show()
-> > </pre>
+> > f.close()
+> > ~~~
+> > {:  .python}
 > >
 > >
 > > <img src="{{ page.root }}/fig/OMI_ColumnAmountO3.png" width="500" alt="raster concept" align="middle">
 > >
 > > 2.
-> > <pre data-executable="true" data-language="python">%matplotlib inline
+> > ~~~
+> > %matplotlib inline
 > > from netCDF4 import Dataset
 > > f = Dataset('AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf')
 > > data = f.variables['topog']
 > > plt.imshow(data)
 > > plt.show()
-> > </pre>
-> > 
+> > f.close()
+> > ~~~
+> > {: .python}
 > > <img src="{{ page.root }}/fig/AIRS_swaft_topog.png" width="500" alt="raster concept" align="middle">
 > {: .solution}
 {: .challenge}
@@ -1054,7 +1063,7 @@ plt.show()
 >
 > > ## Solution
 > > We used `SetAttributeFilter` and `GetNexFeature` to select `stolmakergata`:
-> > <pre data-executable="true" data-language="python">%matplotlib inline
+> > ~~~
 > > layer = shapedata.GetLayer()
 > > layer.SetAttributeFilter("NAME = 'Stolmakergata'")
 > > detail = layer.GetNextFeature()
@@ -1065,8 +1074,8 @@ plt.show()
 > > for i in range(geometry.GetPointCount()):
 > >     xy = geometry.GetPoint(i)
 > >     print(xy)
-> > </pre>
-> > 
+> > ~~~
+> > {: .python}
 > {: .solution}
 {: .challenge}
 
@@ -1110,7 +1119,7 @@ plt.show()
 >      
 > > ## Solution
 > > There is not one solution to this question but here is one way to do it:
-> > <pre data-executable="true" data-language="python">%matplotlib inline
+> > ~~~
 > > layer = shapedata.GetLayer()
 > > layer.SetAttributeFilter("NAME = 'Grasdalsvatnet'")
 > > detail = layer.GetNextFeature()
@@ -1124,8 +1133,8 @@ plt.show()
 > > for i in range(line.GetPointCount()):
 > >     xy = line.GetPoint(i)
 > >     print(xy)
-> > </pre>
-> > 
+> > ~~~
+> > {: .python}
 > {: .solution}
 {: .challenge}
 
