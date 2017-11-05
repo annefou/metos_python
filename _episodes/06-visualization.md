@@ -103,12 +103,11 @@ The main goal here is to create animations embedded within your jupyter notebook
 
 Let's continue our previous example, and add the following:
 
-~~~
+<pre data-executable="true" data-language="python">
 from IPython.display import HTML
 
 HTML(ani.to_html5_video())
-~~~
-{: .python}
+</pre>
 
 <video src="{{ page.root }}/fig/writer_ECMWF_EI_VO_850hPa_2001060100.mp4" poster="{{ page.root }}/fig/EI_VO850hPa_2001060100.png" width="400" controls preload></video>
 

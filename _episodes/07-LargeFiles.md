@@ -254,29 +254,26 @@ print(type(dset))
 So far, we have just open an HDF5 file with `h5py` (this package is a very low level API for reading HDF5 files; it is usually very efficient) and read
 `ColumnAmountO3` (Ozone vertical column density). It's a 2D field, so when we create a `dask` array, we can split it:
 
-~~~
+<pre data-executable="true" data-language="python">
 import dask.array as da
 d_chunks = da.from_array(dset, chunks=(720, 144))
 mx=d_chunks.max()
-~~~
-{: .python}
+</pre>
 
 We haven't computed anything yet as all operations with `dask` are deferred. But we can already see the set of operations necessary to compute the maximum value:
 
-~~~
+<pre data-executable="true" data-language="python">
 mx.visualize()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/dask_h5_max.png" width="500" alt="dask operations" align="middle">
 
 You have to look at the picture from the bottom to the top. At the bottom, you see all your chunks (here 10) and at the top the final result (the maximum 
 value of the entire field).
 
-~~~
+<pre data-executable="true" data-language="python">
 mx.compute()
-~~~
-{: .python}
+</pre>
 
 ~~~
 512.79999
@@ -308,10 +305,9 @@ VOmean.visualize()
 
 <img src="{{ page.root }}/fig/dask_nc_mean.png" width="500" alt="dask operations" align="middle">
 
-~~~
+<pre data-executable="true" data-language="python">
 VOmean.compute()
-~~~
-{: .python}
+</pre>
 
 ~~~
 -0.003835564
