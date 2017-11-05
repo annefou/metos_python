@@ -101,7 +101,7 @@ ax.set_yticks(np.arange(0, 5, 1.0))
 Our goal is to plot a timeserie for North Atlantic Oscillation (NAO) index. We take first sample data i.e. NAO indices
 for 10 days only from the 1st of June 2001 to the 10th of June 2001:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import datetime
 dates = [datetime.date( 2001,6,1), 
      datetime.date( 2001,6,2),
@@ -143,7 +143,7 @@ ax.plot(dates, nao_index)
 > You can fully control how your dates appear in your plot:
 >
 > ~~~
->import matplotlib.pyplot as plt
+> import matplotlib.pyplot as plt
 > import matplotlib.dates
 > %matplotlib inline
 > fig = plt.figure()  # a new figure window
@@ -197,12 +197,15 @@ to fully access their [public dataset](http://apps.ecmwf.int/datasets/). If you 
 you can install the python package called [ECMWF WEB-API](https://software.ecmwf.int/wiki/display/WEBAPI/Web-API+Downloads).
 This part is out of scope of this tutorial and we provide a sample data set in netCDF format `EI_VO_Summer2001.nc`. 
 
-> ## Inspect `EI_VO_Summer2001.nc` wth `ncdump`:
+> ## Inspect `EI_VO_Summer2001.nc` (check metadata):
 >
 > ~~~
-> ncdump -h ./track_summer2001/indat/EI_VO.nc
+> import netCDF4
+> f = Dataset("EI_VO_Summer2001.nc", "r")
+> print(f)
+> f.close()
 > ~~~
-> {: .bash}
+> {: .python}
 >
 > What can you say about this file?
 > 
@@ -364,7 +367,7 @@ f.close()
 
 We can read another field "Mean Sea level pressure" and overlay it on top of the preceding plot:
 
-~~~
+<pre data-executable="true" data-language="python">
 # Add another field on top of the existing VO contours.
 
 f = netCDF4.Dataset('EI_mslp_Summer2001.nc', 'r')
@@ -378,8 +381,7 @@ x,y = map(llons,llats)
 cs = map.contour(x,y,mslp, zorder=2, colors='black')
 ax.clabel(cs, fmt='%.1f',fontsize=9, inline=1)
 f.close()
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100.png" width="400" alt="figures and axes" align="middle">
 
@@ -388,7 +390,7 @@ f.close()
 We will zoom on a chosen area on our map and plot this additional map on the top right of our figure. 
 The location of the zoomed box can be specified with an integer value:
 
-~~~
+<pre data-executable="true" data-language="python">
 # Add a rectangle and zoom 
 # Inset locators
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
@@ -404,8 +406,7 @@ rlon=0
 # 3 indicates the zoom ratio; loc=1 --> upper right
 axins = zoomed_inset_axes(ax, 3, loc=1, bbox_to_anchor=(1.5, 1.0), 
                  bbox_transform=ax.figure.transFigure)
-~~~
-{: .python}
+</pre>
 
 - 'upper right'  : 1,
 - 'upper left'   : 2,
@@ -420,7 +421,7 @@ axins = zoomed_inset_axes(ax, 3, loc=1, bbox_to_anchor=(1.5, 1.0),
 
 Then we can make the same plot as before but for the zoomed area:
 
-~~~
+<pre data-executable="true" data-language="python">
 map.drawcoastlines(ax=axins)
 map.fillcontinents(color='#ffe2ab', zorder=0, ax=axins)
 # draw parallels and meridians.
@@ -440,19 +441,17 @@ csins = map.contourf(x,y,VO, cmap=cmap, norm=norm, levels=bounds,shading='interp
 # set the maximum number of contour to 20
 csins = map.contour(x,y,mslp,20,zorder=2, colors='black', ax=axins)
 axins.clabel(csins, fontsize=14, inline=1,fmt = '%1.0f')
-~~~
-{:  .python}
+</pre>
 
 
 We can also mark our zoomed area in the original plot:
 
-~~~
+<pre data-executable="true" data-language="python">
 axes = mark_inset(ax, axins, loc1=2, loc2=4,  
         edgecolor='red', # line color
         linestyle='dashed',
         linewidth=3)
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/EI_VO850hPa_MSLP_2001060100_zoom.png" width="600" alt="track plot with zoomed area" align="middle">
 
@@ -619,7 +618,6 @@ Basemap object as the target coordinate system.
 
 <pre data-executable="true" data-language="python">%matplotlib inline
 import matplotlib.pyplot as plt
-%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 from osgeo import gdal
 import numpy as np
@@ -720,12 +718,9 @@ We had nothing to do but reading the shapefile with `readshapefile` method from 
 with its full path (but without `.shp` file extension) and the second argument is the name (to be found in the file). You can customize your plot, 
 for instance, by specifying the color and line width:
 
-~~~
+<pre data-executable="true" data-language="python">
 norway_roads= map.readshapefile('Norway_railways/railways', 'railways', color='red',linewidth=1.5)
-
-~~~
-{: .python}
-
+</pre>
 
 <img src="{{ page.root }}/fig/Norway_railways_shapefile_red.png" alt="vector plot" align="middle">
 
@@ -760,7 +755,7 @@ plt.show()
 For instance, if we wish to fill polygons with different colors depending on the county, we can go through our shapefile and choose the
 color for each county. In our shapefile `NOR_adm` county can be identified by their names (`NAME_1`) or their associated identifier (`ID_1`):
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from osgeo import ogr
 
 shapedata = ogr.Open('NOR_adm')
@@ -782,7 +777,7 @@ for i in range(0,len(nor_adm),20):
 
 Now we can assign a color for each county and make a plot where ploygons are filled according to the county name:
 
-~~~
+<pre data-executable="true" data-language="python">
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
@@ -813,17 +808,15 @@ col = PatchCollection(patches, linewidths=1., zorder=2)
 col.set(array=color_values, cmap='jet')
 
 ax.add_collection(col)
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/NOR_adm_shapefile_filled.png" alt="vector plot" align="middle">
 
 or using `gal ogr`:
 
-~~~
+<pre data-executable="true" data-language="python">%matplotlib inline
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-%matplotlib inline
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import PathPatch
@@ -872,8 +865,7 @@ for i in range(layer.GetFeatureCount()):
 col = PatchCollection(patches, linewidths=1., zorder=2)
 col.set(array=color_values, cmap='jet') 
 ax.add_collection(col)
-~~~
-{: .python}
+</pre>
 
 <img src="{{ page.root }}/fig/NOR_adm_shapefile_filled_ogr.png" alt="vector plot" align="middle">
 
@@ -883,17 +875,16 @@ When using a jupyter notebook, it is easy to save your figures:
 - right click with your mouse and save your figure as png file.
 
 However, when running a python script or when you have many figures to generate and save, the best is to use `savefig`:
-~~~
+
+<pre data-executable="true" data-language="python">
 fig.savefig('fig.png')
-~~~
-{: .python}
+</pre>
 
 To change the format, simply change the extension like so:
 
-~~~
+<pre data-executable="true" data-language="python">
 fig.savefig('fig.pdf')
-~~~
-{: .python}
+</pre>
 
 ## Optimize your scientific workflow: isolate computations and plotting
 
