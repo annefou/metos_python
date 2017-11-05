@@ -161,7 +161,7 @@ those covered by Unidata netCDF library.
 
 Start a new jupyter notebook and enter:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 </pre>
 
@@ -172,7 +172,7 @@ import netCDF4
 
 All of the following code examples assume that the netcdf4-python library has been imported:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 </pre>
 
@@ -193,7 +193,7 @@ foo.close()
 
 Then you should find a new file called "foo.nc" in your working directory:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 ls
 </pre>
 
@@ -749,7 +749,7 @@ can also be applied to read the netCDF and HDF files we used in this lesson. See
 [here](http://www.gdal.org/formats_list.html).
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from osgeo import gdal
 datafile = gdal.Open('metos_python/data/Southern_Norway_and_Sweden.2017229.terra.1km.tif')
 print( "Driver: ",datafile.GetDriver().ShortName, datafile.GetDriver().LongName)
@@ -811,7 +811,7 @@ Band 3 Block=910x3 Type=Byte, ColorInterp=Blue
 
 This GeoTIFF file contains 3 bands (Red, Green and Blue), so we can extract each band and visualize one band with imshow:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 bnd1 = datafile.GetRasterBand(1).ReadAsArray()
 bnd2 = datafile.GetRasterBand(2).ReadAsArray()
 bnd3 = datafile.GetRasterBand(3).ReadAsArray()
@@ -824,7 +824,7 @@ plt.show()
 
 To visualize our 3 bands as an RGB image, we need to stack the 3 indivual arrays into one image:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 print(type(bnd1), bnd1.shape)
 print(type(bnd2), bnd3.shape)
 print(type(bnd3), bnd3.shape)
@@ -871,7 +871,7 @@ as an open format in 1998. It was initially developed for their ArcView software
 Let's take an example (downloaded from [http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html]](http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html)).
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 ls Norway_places
 </pre>
 
@@ -897,7 +897,7 @@ Sometimes, a shapefile will have other associated files including:
  
 ### Examine shapefile with python
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from osgeo import ogr
 shapedata = ogr.Open('Norway_places')
 </pre>
@@ -925,7 +925,7 @@ shapedata.GetSummaryRefCount   shapedata.__init__             shapedata.this
 
 For instance, to get the number of layers:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 shapedata.GetLayerCount()
 </pre>
 
@@ -942,7 +942,7 @@ shapedata.GetLayerCount()
  
 Then get the first layer and all the points from this layer, with feature "NAME" and the coordinates of each location:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 layer = shapedata.GetLayer()
 places_norway = []
 for i in range(layer.GetFeatureCount()):
@@ -1207,7 +1207,7 @@ Geometric objects with additional properties are Feature objects. Sets of featur
 To read the preceding file `la_city.geoson` in python, we can use `gdal ogr` and it is very similar to what we did when reading 
 shapefiles:
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from osgeo import ogr
 la = ogr.Open('la_city.geojson')
 nblayer = la.GetLayerCount()
@@ -1231,7 +1231,7 @@ the same. Let's take another example:
 
 *Source: Grensedata Norge WGS84 Adm enheter geoJSON downloaded from [kartverket](http://data.kartverket.no/download/); registration is free for open data access*
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 from osgeo import ogr
 shapedata = ogr.Open('no-all-all.geojson')
 nblayer = shapedata.GetLayerCount()
