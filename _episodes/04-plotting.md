@@ -142,7 +142,7 @@ ax.plot(dates, nao_index)
 > ## date formatting 
 > You can fully control how your dates appear in your plot:
 >
-> ~~~
+> <pre data-executable="true" data-language="python">
 > import matplotlib.pyplot as plt
 > import matplotlib.dates
 > %matplotlib inline
@@ -164,8 +164,7 @@ ax.plot(dates, nao_index)
 >  )
 > # plot nao_index as a function of dates.
 > ax.plot(dates, nao_index, 'r.-')
-> ~~~
-> {: .python}
+> </pre>
 > 
 > <img src="{{ page.root }}/fig/sample_data_ts_customized.png" width="400" alt="figures and axes" align="middle">
 >
@@ -199,13 +198,12 @@ This part is out of scope of this tutorial and we provide a sample data set in n
 
 > ## Inspect `EI_VO_Summer2001.nc` (check metadata):
 >
-> ~~~
+> <pre data-executable="true" data-language="python">
 > import netCDF4
 > f = Dataset("EI_VO_Summer2001.nc", "r")
 > print(f)
 > f.close()
-> ~~~
-> {: .python}
+> </pre>
 >
 > What can you say about this file?
 > 
@@ -471,14 +469,13 @@ axes = mark_inset(ax, axins, loc1=2, loc2=4,
 > ~~~
 > {: .bash}
 > This file can be read with the `pandas` python package: 
-> ~~~
+> <pre data-executable="true" data-language="python">
 > # To read track data, use pandas library
 > import pandas
 >
 > data = pandas.read_csv('tracks_20010601.csv')
 > print(data)
-> ~~~
-> {: .python}
+> </pre>
 > 
 > > ## Solution
 > > 
