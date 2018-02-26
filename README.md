@@ -4,6 +4,12 @@
 These lessons will introduce you to Python for analyzing and visualizing spatio-temporal data. 
 We are using datasets from the environmental sciences that are freely available.
 
+Please visit [https://annefou.github.io/metos_python/](https://annefou.github.io/metos_python/) for the lesson web page.
+
+
+[![DOI](https://zenodo.org/badge/96184802.svg)](https://zenodo.org/badge/latestdoi/96184802)
+
+
 These lessons have been developed at the University of Oslo by **Ana Costa Conrado**, **Gladys Nalvarte** and **Anne Fouilloux**.
 
 Who: The course is aimed at graduate students and other researchers. 
