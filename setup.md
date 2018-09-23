@@ -425,7 +425,7 @@ $ conda install pillow
 {: .bash}
 
 
-### scipy, scikit-image and scickit-learn
+### scipy, scikit-image and scikit-learn
 
 ~~~
 $ conda install scipy scikit-learn scikit-image
@@ -443,7 +443,7 @@ $ conda install xarray dask=0.15.2
 
 
 
-### xarray and dask, etc.
+### cartopy, holoviews, datashader and dill
 
 ~~~
 $ conda install cartopy holoviews datashader dill
