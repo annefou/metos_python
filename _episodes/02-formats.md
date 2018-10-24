@@ -868,7 +868,7 @@ The most ubiquitous vector format is the [ESRI shapefile](http://doc.arcgis.com/
 Geospatial Software company [ESRI](https://www.esri.com/en-us/home) released the [shapefile format specification](https://www.google.no/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjprcuh6aHWAhXFIVAKHXUMDCcQFggoMAA&url=https%3A%2F%2Fwww.esri.com%2Flibrary%2Fwhitepapers%2Fpdfs%2Fshapefile.pdf&usg=AFQjCNE2L0GtnHhhrCxchbTpnbh8tx-jWw)
 as an open format in 1998. It was initially developed for their ArcView software but it became quickly an unofficial GIS standard.
 
-Let's take an example (downloaded from [http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html]](http://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html)).
+Let's take an example (downloaded from [mapcruzin.com/free-norway-arcgis-maps-shapefiles.html](https://www.mapcruzin.com/free-norway-arcgis-maps-shapefiles.html)).
 
 
 <pre data-executable="true" data-language="python">
