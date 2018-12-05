@@ -21,7 +21,7 @@ keypoints:
 - Finally, we will see what are vector formats and in particular shapefiles.
 
 
-This lesson is based on the Data Carpentry lesson [Spatial Data Formats](http://www.datacarpentry.org/r-spatial-data-management-intro/R/spatial-data-formats).
+This lesson is based on the Data Carpentry lesson [Geospatial Data Formats](https://datacarpentry.org/lessons/#geospatial-curriculum).
 
 # Types of Spatial Data
 
