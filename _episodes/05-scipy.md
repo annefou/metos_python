@@ -75,7 +75,7 @@ Let's take the following example where we apply K-means for different number of 
 Monthly Average Precipitable Water over Ice-Free Oceans (kg m-2) October 2009:
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 import numpy as np
 from scipy.cluster.vq import *
