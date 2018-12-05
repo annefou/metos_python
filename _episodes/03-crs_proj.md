@@ -37,20 +37,7 @@ look proportionally larger or smaller than they actually are!
 
 To define the location of something we often use a coordinate system. This system
 consists of an X and a Y value, located within a 2 (or more) -dimensional space.
-
-<figure>
-	<a href="http://open.senecac.on.ca/clea/label/projectImages/15_276_xy-grid.jpg">
-	<img src="http://open.senecac.on.ca/clea/label/projectImages/15_276_xy-grid.jpg"></a>
-	<figcaption><i> We use coordinate systems with X, Y (and sometimes Z axes) to
-	define the location of objects in space.<br>
-	Source: http://open.senecac.on.ca</i>
-	</figcaption>
-</figure>
-
-
-While the above coordinate system is 2-dimensional, we live on a 3-dimensional
-earth that happens to be "round". To define the location of objects on the earth, which is round, we need
-a coordinate system that adapts to the Earth's shape. When we make maps on paper
+We live on a 3-dimensional earth that happens to be "round". To define the location of objects on the earth, which is round, we need a coordinate system that adapts to the Earth's shape. When we make maps on paper
 or on a flat computer screen, we move from a 3-Dimensional space (the globe) to
 a 2-Dimensional space (our computer
 screens or a piece of paper). The components of the CRS define how the
