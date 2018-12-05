@@ -140,7 +140,7 @@ The netCDF file we used can be freely downloaded at [here](https://ghrc.nsstc.na
 {: .callout}
 
 
-<pre data-executable="true" data-language="python">%matplotlib inline
+<pre data-executable="true" data-language="python">
 import netCDF4
 import numpy as np
 from scipy.cluster.vq import *
