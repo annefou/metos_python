@@ -84,8 +84,8 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 
 f = netCDF4.Dataset('tpw_v07r01_200910.nc4.nc', 'r')
-lats = f.variables['latitude']
-lons = f.variables['longitude']
+lats = f.variables['latitude'][:]
+lons = f.variables['longitude'][:]
 pw = f.variables['precipitable_water'][0,:,:]
 
 f.close()
@@ -151,8 +151,8 @@ import matplotlib.pyplot as plt
 np.random.seed((1000,2000))
 
 f = netCDF4.Dataset('tpw_v07r01_200910.nc4.nc', 'r')
-lats = f.variables['latitude']
-lons = f.variables['longitude']
+lats = f.variables['latitude'][:]
+lons = f.variables['longitude'][:]
 pw = f.variables['precipitable_water'][0,:,:]
 
 f.close()
