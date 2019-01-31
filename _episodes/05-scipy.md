@@ -108,7 +108,7 @@ plt.colorbar(original, cmap='rainbow', ax=ax, orientation='vertical')
 # Define colormap
 list_colors=['blue','orange', 'green', 'magenta', 'cyan', 'gray', 'red', 'yellow']
 for i in range(7):
-    print("Calculate k-means with ", i+2, " cluster.")
+    print("Calculate k-means with ", i+2, " clusters.")
     
     #This scipy code clusters k-mean, code has same length as flattened
     # raster and defines which cluster the value corresponds to
@@ -174,14 +174,14 @@ ax1.axis('off')
 ax1.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
 original=ax1.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
 plt.colorbar(original, cmap='rainbow', ax=ax1, orientation='vertical')
-# In remaining subplots add k-means classified images
+# In remaining subplots add k-means clustered images
 # Define colormap
 list_colors=['blue','orange', 'green', 'magenta', 'cyan', 'gray', 'red', 'yellow']
 
 print("Calculate k-means with 6 clusters.")
     
 #This scipy code classifies k-mean, code has same length as flattened
-# raster and defines which class the value corresponds to
+# raster and defines which cluster the value corresponds to
 centroids, variance = kmeans(flatraster.astype(float), 6)
 code, distance = vq(flatraster, centroids)
     
