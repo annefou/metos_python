@@ -68,7 +68,7 @@ K-means is a widely used method in cluster analysis. However, this method is val
 
 If any one of these 3 assumptions are violated, then k-means will not be correct.
 
-On major decision you have to take when using K-means is to choose the number of cluster a priori. However, as we will see below, this choice is critical
+On major decision you have to take when using K-means is to choose the number of clusters a priori. However, as we will see below, this choice is critical
 and has a strong influence on the results:
 
 Let's take the following example where we apply K-means for different number of clusters on a netCDF file containing 
@@ -96,7 +96,7 @@ flatraster = flatraster.data
 
 # Create figure to receive results
 fig = plt.figure(figsize=[20,7])
-fig.suptitle('K-Means Classification')
+fig.suptitle('K-Means Clustering')
 
 # In first subplot add original image
 ax = plt.subplot(241)
@@ -104,18 +104,18 @@ ax.axis('off')
 ax.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
 original=ax.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
 plt.colorbar(original, cmap='rainbow', ax=ax, orientation='vertical')
-# In remaining subplots add k-means classified images
+# In remaining subplots add k-means clustered images
 # Define colormap
 list_colors=['blue','orange', 'green', 'magenta', 'cyan', 'gray', 'red', 'yellow']
 for i in range(7):
     print("Calculate k-means with ", i+2, " cluster.")
     
-    #This scipy code classifies k-mean, code has same length as flattened
-    # raster and defines which class the value corresponds to
+    #This scipy code clusters k-mean, code has same length as flattened
+    # raster and defines which cluster the value corresponds to
     centroids, variance = kmeans(flatraster.astype(float), i+2)
     code, distance = vq(flatraster, centroids)
     
-    #Since code contains the classified values, reshape into SAR dimensions
+    #Since code contains the clustered values, reshape into SAR dimensions
     codeim = code.reshape(pw.shape[0], pw.shape[1])
     
     #Plot the subplot with (i+2)th k-means
@@ -169,7 +169,7 @@ fig, (ax1, ax2, ax3)  = plt.subplots(3, sharex=True)
 fig.set_figheight(20)
 fig.set_figwidth(15)
 
-fig.suptitle('K-Means Classification')
+fig.suptitle('K-Means Clustering')
 ax1.axis('off')
 ax1.set_title('Original Image\nMonthly Average Precipitable Water\n over Ice-Free Oceans (kg m-2)')
 original=ax1.imshow(pw, cmap='rainbow', interpolation='nearest', aspect='auto', origin='lower')
@@ -185,7 +185,7 @@ print("Calculate k-means with 6 clusters.")
 centroids, variance = kmeans(flatraster.astype(float), 6)
 code, distance = vq(flatraster, centroids)
     
-#Since code contains the classified values, reshape into SAR dimensions
+#Since code contains the clustered values, reshape into SAR dimensions
 codeim = code.reshape(pw.shape[0], pw.shape[1])
     
 #Plot the subplot with 4th k-means
